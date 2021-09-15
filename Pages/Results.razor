@@ -1,0 +1,40 @@
+﻿@page "/item"
+
+<PageTitle>Maple2Codex Items</PageTitle>
+
+@using Maplecodex2.Data
+@using Maplecodex2.Data.Services
+@using Maplecodex2.Data.Models
+@inject ItemService ItemService
+
+<h1>Maple2Codex</h1>
+
+<p>Item retrieve for Ms2.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ItemID</th>
+            <th>ItemClass</th>
+            <th>ItemName</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@item?.Id</td>
+            <td>@item?.Name</td>
+            <td>@item?.Type</td>
+        </tr>
+    </tbody>
+</table>
+
+@code {
+    private Item? item = new Item();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Random r = new Random();
+        int next = r.Next(10200001, 10200200);
+        item = await ItemService.GetItemAsync(next);
+    }
+}
