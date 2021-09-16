@@ -1,40 +1,51 @@
-﻿@page "/item"
-
-<PageTitle>Maple2Codex Items</PageTitle>
-
-@using Maplecodex2.Data
+﻿@using Maplecodex2.Data
 @using Maplecodex2.Data.Services
 @using Maplecodex2.Data.Models
+@using Maplecodex2.Data.Storage
+@using Maplecodex2.Data.Helpers
 @inject ItemService ItemService
 
-<h1>Maple2Codex</h1>
+@*// Items //*@
+@page "/item"
+<nav class="container header navbar justify-content-around">
+    <h2>Maplecodex2</h2>
+    <form class="form-inline">
+        <input class="form-control" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" aria-label="Search">
+    </form>
+</nav>
 
-<p>Item retrieve for Ms2.</p>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>ItemID</th>
-            <th>ItemClass</th>
-            <th>ItemName</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>@item?.Id</td>
-            <td>@item?.Name</td>
-            <td>@item?.Type</td>
-        </tr>
-    </tbody>
-</table>
+<div class="container results">
+    <table>
+        <thead>
+            <tr>
+                <th>Icon</th>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><img src="/Icons/Item/80000074.png"/></td>
+                <td>@item?.Id</td>
+                <td>@item?.Type</td>
+                <td>@item?.Name</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 @code {
-    private Item? item = new Item();
+    private Item? item;
+    private int SearchId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Random r = new Random();
-        int next = r.Next(10200001, 10200200);
-        item = await ItemService.GetItemAsync(next);
+        item = await ItemService.GetItemAsync(0);
+    }
+
+    public async Task SearchItemAsync()
+    {
+        item = await ItemService.GetItemAsync(SearchId >= 0 ? SearchId : 1);
     }
 }

@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Maplecodex2.Data.Services;
+using Maplecodex2.Data.Helpers;
+using System.Reflection;
+using Maplecodex2.Data.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 // Custom services
 builder.Services.AddSingleton<ItemService>();
+
+// Initialize
+ItemStorage.Init();
 
 var app = builder.Build();
 
@@ -21,12 +27,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
-
-
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 

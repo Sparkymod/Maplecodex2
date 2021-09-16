@@ -1,6 +1,8 @@
 ﻿using Maplecodex2.Data.Models;
 using Maplecodex2.Data.Helpers;
 using System.Xml;
+using System.Reflection;
+using System.Linq;
 
 namespace Maplecodex2.Data.Parser
 {
@@ -10,10 +12,10 @@ namespace Maplecodex2.Data.Parser
         /// Parse Items from itemname.xml
         /// </summary>
         /// <returns>List of item.</returns>
-        public static List<Item> Items()
+        public static List<Item> Items(string filename)
         {
             List<Item> itemList = new();
-            XmlDocument document = DataHelper.ReadDataFromXml("C:\\Users\\rafael.nunez\\Downloads\\itemname.xml");
+            XmlDocument document = DataHelper.ReadDataFromXml(filename);
 
             XmlNodeList itemNodes = document.SelectNodes("ms2/key");
             foreach (XmlNode item in itemNodes)
