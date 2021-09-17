@@ -32,14 +32,14 @@ namespace Maplecodex2.Data.Helpers
         public static List<string> GetAllFilesFrom(string directory)
         {
             string delimiter = $"{directory}/*.*";
-            List<string> allFiles = new();
+            List<string> files = new();
 
             foreach (string file in Directory.GetFiles(Paths.XML_ROOT, delimiter, SearchOption.AllDirectories))
             {
-                allFiles.Add(file);
+                files.Add(file);
             }
 
-            return allFiles;
+            return files;
         }
     }
 }

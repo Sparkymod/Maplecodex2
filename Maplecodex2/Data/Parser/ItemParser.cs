@@ -16,37 +16,42 @@ namespace Maplecodex2.Data.Parser
         {
             List<Item> itemList = new();
 
+            XmlDocument itemname = DataHelper.ReadDataFromXml(Paths.XML_ITEM);
+            XmlNodeList itemNodes = itemname.SelectNodes("ms2/key");
+
+            foreach (XmlNode node in itemNodes)
+            {
+                // Set Item values
+                Item item = new();
+
+                // From itemname
+                item.Id = int.Parse(node.Attributes["id"]?.Value ?? "0");
+                item.Type = node.Attributes["class"]?.Value ?? "NOT_DEFINED";
+                item.Name = node.Attributes["name"]?.Value ?? "NOT_DEFINED";
+                item.Feature = node.Attributes["feature"]?.Value ?? "NOT_DEFINED";
+                item.Locale = node.Attributes["locale"]?.Value ?? "NOT_DEFINED";
+
+                itemList.Add(item);
+            }
+            
             foreach (string entry in DataHelper.GetAllFilesFrom("item"))
             {
+                if (itemList.Find(item => item.Id == int.Parse(Path.GetFileNameWithoutExtension(entry))) == null) { continue; }
+
                 // Read and save the XML in document.
                 XmlDocument document = DataHelper.ReadDataFromXml(entry);
-                
+
                 // Root node for start reading.
-                XmlNodeList environmentNodes = document.SelectNodes("ms2/environment");
+                XmlNode property = document.SelectSingleNode("ms2/environment/property");
 
-                Item item = new ();
+                // From each id.xml
+                string icon = property.Attributes["slotIcon"].Value != "icon0.png" ? property.Attributes["slotIcon"].Value : property.Attributes["slotIconCustom"].Value;
+                string category = property.Attributes["category"].Value;
 
-                foreach (XmlNode node in environmentNodes)
-                {
-                    XmlNode property = node.SelectSingleNode("property");
-
-                    // Set Icon
-                    item.Icon = property.Attributes["slotIcon"].Value != "icon0.png" ? property.Attributes["slotIcon"].Value : property.Attributes["slotIconCustom"].Value;
-                    
-                }
-                // 
-                //XmlNodeList itemNodes = document.SelectNodes("ms2/key");
-                //foreach (XmlNode item in itemNodes)
-                //{
-                //    int id = int.Parse(item.Attributes["id"]?.Value ?? "0");
-                //    string type = item.Attributes["class"]?.Value ?? "NOT_DEFINED";
-                //    string name = item.Attributes["name"]?.Value ?? "NOT_DEFINED";
-                //    string feature = item.Attributes["feature"]?.Value ?? "NOT_DEFINED";
-                //    string locale = item.Attributes["locale"]?.Value ?? "NOT_DEFINED";
-
-                //    itemList.Add(new Item(id, type, name, feature, locale));
-                //}
+                itemList.Find(item => item.Id == int.Parse(Path.GetFileNameWithoutExtension(entry))).Icon = icon;
+                itemList.Find(item => item.Id == int.Parse(Path.GetFileNameWithoutExtension(entry))).Category = category;
             }
+
             return itemList;
         }
     }
