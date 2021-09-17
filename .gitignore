@@ -334,7 +334,7 @@ ASALocalRun/
 .localhistory/
 
 # Custom
-Data/Xml/*.xml
-Data/Icons/Item/*.png
-Data/Icons/Item/*.jpeg
-Data/Icons/Item/*.jpg
+Maplecodex2/Data/Xml/
+Maplecodex2/Data/Icons/Item/*.png
+Maplecodex2/Data/Icons/Item/*.jpeg
+Maplecodex2/Data/Icons/Item/*.jpg

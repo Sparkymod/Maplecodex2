@@ -9,7 +9,7 @@ namespace Maplecodex2.Data.Storage
     {
         private static readonly Dictionary<int, Item> Items = new();
 
-        public static void Init() => ItemParser.Items(Paths.XML_ITEM).ForEach(item => Items[item.Id] = item);
+        public static void Init() => ItemParser.Items().ForEach(item => Items[item.Id] = item);
 
         public static Item GetItem(int id) => Items.GetValueOrDefault(id);
     }
