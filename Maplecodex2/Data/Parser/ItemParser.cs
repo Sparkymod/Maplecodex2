@@ -12,9 +12,9 @@ namespace Maplecodex2.Data.Parser
         /// ...
         /// </summary>
         /// <returns>List of Item.</returns>
-        public static List<Item> Items()
+        public static Dictionary<int, Item> Items()
         {
-            List<Item> itemList = new();
+            Dictionary<int, Item> itemList = new();
 
             XmlDocument itemname = DataHelper.ReadDataFromXml(Paths.XML_ITEM);
             XmlNodeList itemNodes = itemname.SelectNodes("ms2/key");
@@ -31,12 +31,14 @@ namespace Maplecodex2.Data.Parser
                 item.Feature = node.Attributes["feature"]?.Value ?? "NOT_DEFINED";
                 item.Locale = node.Attributes["locale"]?.Value ?? "NOT_DEFINED";
 
-                itemList.Add(item);
+                itemList[item.Id] = item;
             }
             
             foreach (string entry in DataHelper.GetAllFilesFrom("item"))
             {
-                if (itemList.Find(item => item.Id == int.Parse(Path.GetFileNameWithoutExtension(entry))) == null) { continue; }
+                int id = int.Parse(Path.GetFileNameWithoutExtension(entry));
+                
+                if (!itemList.ContainsKey(id)) { continue; }
 
                 // Read and save the XML in document.
                 XmlDocument document = DataHelper.ReadDataFromXml(entry);
@@ -48,8 +50,8 @@ namespace Maplecodex2.Data.Parser
                 string icon = property.Attributes["slotIcon"].Value != "icon0.png" ? property.Attributes["slotIcon"].Value : property.Attributes["slotIconCustom"].Value;
                 string category = property.Attributes["category"].Value;
 
-                itemList.Find(item => item.Id == int.Parse(Path.GetFileNameWithoutExtension(entry))).Icon = icon;
-                itemList.Find(item => item.Id == int.Parse(Path.GetFileNameWithoutExtension(entry))).Category = category;
+                itemList[id].Icon = icon;
+                itemList[id].Category = category;
             }
 
             return itemList;

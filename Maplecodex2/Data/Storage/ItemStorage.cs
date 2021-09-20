@@ -7,10 +7,12 @@ namespace Maplecodex2.Data.Storage
 {
     public static class ItemStorage
     {
-        private static readonly Dictionary<int, Item> Items = new();
+        private static Dictionary<int, Item> Items = new();
 
-        public static void Init() => ItemParser.Items().ForEach(item => Items[item.Id] = item);
+        public static void Init() => Items = ItemParser.Items();
 
         public static Item GetItem(int id) => Items.GetValueOrDefault(id);
+
+        public static IEnumerable<Item> GetAll() => Items.Values;
     }
 }

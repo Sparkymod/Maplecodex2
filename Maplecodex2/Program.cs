@@ -1,22 +1,22 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Maplecodex2.Data.Services;
-using Maplecodex2.Data.Helpers;
-using System.Reflection;
+using Serilog;
+using Maplecodex2;
+using Maplecodex2.Database.Managers;
+using Maplecodex2.Database;
+using Microsoft.EntityFrameworkCore;
 using Maplecodex2.Data.Storage;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-// Custom services
 builder.Services.AddSingleton<ItemService>();
 
-// Initialize
-ItemStorage.Init();
+// Set serilog configuration.
+builder.Host.UseSerilog(Settings.InitializeSerilog());
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -28,8 +28,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseSerilogRequestLogging();
 app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+// Initialization
+Settings.InitDatabase();
+Settings.ParseDataIntoDatabase();
 
 app.Run();
