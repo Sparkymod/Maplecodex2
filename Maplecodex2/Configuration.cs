@@ -14,7 +14,7 @@ namespace Maplecodex2
 {
     public static class Settings
     {
-        public const bool PARSE_TO_DB = true;
+        public const bool PARSE_TO_DB = false;
 
         public static async void ParseDataIntoDatabase()
         {

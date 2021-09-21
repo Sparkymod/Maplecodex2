@@ -6,12 +6,12 @@ namespace Maplecodex2.Data.Models
     public class Item : IEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string Feature { get; set; }
-        public string Locale { get; set; }
-        public string Icon { get; set; }
-        public string Category { get; set; }
+        public string? Name { get; set; }
+        public string? Type { get; set; }
+        public string? Feature { get; set; }
+        public string? Locale { get; set; }
+        public string? Icon { get; set; }
+        public string? Category { get; set; }
 
         public Item() { }
 
@@ -29,6 +29,7 @@ namespace Maplecodex2.Data.Models
         public static void Build(EntityTypeBuilder<Item> entity) // EF Core builder
         {
             entity.HasKey(item => item.Id);
+
             entity.Property(item => item.Id).IsRequired();
             entity.Property(item => item.Name).HasMaxLength(255);
             entity.Property(item => item.Type).HasMaxLength(255);
