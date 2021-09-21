@@ -26,10 +26,10 @@ namespace Maplecodex2.Data.Parser
 
                 // From itemname
                 item.Id = int.Parse(node.Attributes["id"]?.Value ?? "0");
-                item.Type = node.Attributes["class"]?.Value ?? "NOT_DEFINED";
-                item.Name = node.Attributes["name"]?.Value ?? "NOT_DEFINED";
-                item.Feature = node.Attributes["feature"]?.Value ?? "NOT_DEFINED";
-                item.Locale = node.Attributes["locale"]?.Value ?? "NOT_DEFINED";
+                item.Type = node.Attributes["class"]?.Value ?? "NaN";
+                item.Name = node.Attributes["name"]?.Value ?? "NaN";
+                item.Feature = node.Attributes["feature"]?.Value ?? "NaN";
+                item.Locale = node.Attributes["locale"]?.Value ?? "NaN";
 
                 itemList[item.Id] = item;
             }
@@ -47,9 +47,20 @@ namespace Maplecodex2.Data.Parser
                 XmlNode property = document.SelectSingleNode("ms2/environment/property");
 
                 // From each id.xml
-
-                itemList[id].Icon = property.Attributes["slotIcon"]?.Value != "icon0.png" ? property.Attributes["slotIcon"].Value : property.Attributes["slotIconCustom"].Value;
-                itemList[id].Category = property.Attributes["category"]?.Value ?? "NOT_DEFINED";
+                string icon = "NaN";
+                if (property.Attributes["slotIcon"] != null)
+                {
+                    icon = property.Attributes["slotIcon"].Value != "icon0.png" ? property.Attributes["slotIcon"].Value : property.Attributes["slotIconCustom"].Value;
+                }
+                
+                string category = "NaN";
+                if(property.Attributes["category"] != null && string.IsNullOrEmpty(property.Attributes["category"].Value))
+                {
+                    category = property.Attributes["category"].Value;
+                }
+                
+                itemList[id].Icon = icon;
+                itemList[id].Category = category;
             }
 
             return itemList;

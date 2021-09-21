@@ -34,10 +34,10 @@ namespace Maplecodex2
                     InitializeMetadata();
 
                     // Foreach class type Storage, GetAll items and parse them
-                    ItemManager itemManager = new(GetDbContext());
+
                     foreach (Item item in ItemStorage.GetAll())
                     {
-                        await itemManager.Add(item);
+                        //await Service<Item>.Manager.Add(item);
                     }
                     Log.Logger.Warning($"Saving data to Database Complete!");
 
@@ -50,7 +50,7 @@ namespace Maplecodex2
         // TODO foreach class type [Storage], get the Method {Init} to initialize them all by Reflection.
         public static void InitializeMetadata() => ItemStorage.Init();
 
-        public static void InitDatabase() => new DatabaseManager(GetDbContext()).InitDatabase();
+        public static void InitDatabase() => new DatabaseManager().InitDatabase();
 
         public static DatabaseContext GetDbContext() => new(GetOptionBuilder().Options);
 

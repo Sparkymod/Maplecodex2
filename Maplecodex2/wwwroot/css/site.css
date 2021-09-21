@@ -29,12 +29,11 @@ a, .btn-link {
     overflow: hidden;
     box-shadow: 0.25rem 0.25rem black;
     display: grid;
-    grid-template-columns: 20rem, 20rem, 20rem, 20rem;
+    grid-template-columns: auto;
     grid-template-rows: auto;
     grid-template-areas:
-        "header header header header"
-        ". search search ."
-        "result result result result";
+        "header"
+        "result";
     margin-top: 1rem;
 }
 
@@ -42,9 +41,6 @@ a, .btn-link {
     background-color: burlywood;
     grid-area: header;
 }
-.search {
-    grid-area: search;
- }
 
 .results{
     grid-area: result;

@@ -5,10 +5,8 @@ using Serilog;
 
 namespace Maplecodex2.Database.Managers
 {
-    public class DatabaseManager : DatabaseRequest<IEntity, DatabaseContext>
+    public class DatabaseManager : DatabaseRequest<IEntity>
     {
-        public DatabaseManager(DatabaseContext context) : base(context) => Context = context;
-
         private static bool Exists() => ((RelationalDatabaseCreator)Context.Database.GetService<IDatabaseCreator>()).Exists();
 
         private static void CreateDatabase() => Context.Database.EnsureCreated();

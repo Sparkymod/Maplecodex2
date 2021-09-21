@@ -1,17 +1,12 @@
 ﻿using Maplecodex2.Data.Storage;
 using Maplecodex2.Data.Models;
 using Maplecodex2.Database.Managers;
+using Maplecodex2.Database.Core;
 
 namespace Maplecodex2.Data.Services
 {
-    public class ItemService
+    public class ItemService : DatabaseRequest<Item>
     {
-        public Task<Item> GetItemAsync(int id)
-        {
-            ItemManager manager = new ItemManager(Settings.GetDbContext());
-
-            return manager.Get(id);
-            //return Task.FromResult(ItemStorage.GetItem(id));
-        }
+        public Task<Item> GetItemAsync(int id) => Get(id);
     }
 }

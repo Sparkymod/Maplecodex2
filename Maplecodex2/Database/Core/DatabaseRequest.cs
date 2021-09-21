@@ -3,11 +3,11 @@ using Serilog;
 
 namespace Maplecodex2.Database.Core
 {
-    public abstract class DatabaseRequest<TEntity, TContext> : IDisposable, IModel<TEntity> where TEntity : class, IEntity where TContext : DbContext
+    public abstract class DatabaseRequest<TEntity> : IDisposable, IModel<TEntity> where TEntity : class, IEntity
     {
-        public static TContext? Context { get; set; }
+        public static DbContext? Context { get; set; }
 
-        public DatabaseRequest(TContext context) => Context = context;
+        public DatabaseRequest() => Context = Settings.GetDbContext();
 
         public async Task<TEntity> Add(TEntity entity)
         {

@@ -8,6 +8,8 @@ using Maplecodex2.Data.Storage;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -33,8 +35,8 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
+app.Run();
+
 // Initialization
 Settings.InitDatabase();
 Settings.ParseDataIntoDatabase();
-
-app.Run();
