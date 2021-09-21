@@ -8,6 +8,7 @@ using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
 using Maplecodex2.Database.Managers;
 using Maplecodex2.Database;
+using Maplecodex2.Data.Models;
 
 namespace Maplecodex2
 {
@@ -33,10 +34,12 @@ namespace Maplecodex2
                     InitializeMetadata();
 
                     // Foreach class type Storage, GetAll items and parse them
-                    var item = ItemStorage.GetItem(1);
                     ItemManager itemManager = new(GetDbContext());
-                    await itemManager.Add(item);
-                    Log.Logger.Warning($"Saving data to Database... Please Wait");
+                    foreach (Item item in ItemStorage.GetAll())
+                    {
+                        await itemManager.Add(item);
+                    }
+                    Log.Logger.Warning($"Saving data to Database Complete!");
 
                     timer.Stop();
                     Log.Logger.Information($"Parse to Database finished in: {timer.Elapsed.TotalSeconds}");
@@ -148,11 +151,9 @@ namespace Maplecodex2
                         break;
                     case ConsoleThemeStyle.LevelError:
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Beep();
                         break;
                     case ConsoleThemeStyle.LevelFatal:
                         Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Beep();
                         break;
                     default:
                         break;

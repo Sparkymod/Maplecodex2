@@ -33,11 +33,11 @@ namespace Maplecodex2.Data.Parser
 
                 itemList[item.Id] = item;
             }
-            
+
             foreach (string entry in DataHelper.GetAllFilesFrom("item"))
             {
                 int id = int.Parse(Path.GetFileNameWithoutExtension(entry));
-                
+
                 if (!itemList.ContainsKey(id)) { continue; }
 
                 // Read and save the XML in document.
@@ -47,11 +47,9 @@ namespace Maplecodex2.Data.Parser
                 XmlNode property = document.SelectSingleNode("ms2/environment/property");
 
                 // From each id.xml
-                string icon = property.Attributes["slotIcon"].Value != "icon0.png" ? property.Attributes["slotIcon"].Value : property.Attributes["slotIconCustom"].Value;
-                string category = property.Attributes["category"].Value;
 
-                itemList[id].Icon = icon;
-                itemList[id].Category = category;
+                itemList[id].Icon = property.Attributes["slotIcon"]?.Value != "icon0.png" ? property.Attributes["slotIcon"].Value : property.Attributes["slotIconCustom"].Value;
+                itemList[id].Category = property.Attributes["category"]?.Value ?? "NOT_DEFINED";
             }
 
             return itemList;
