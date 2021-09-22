@@ -51,6 +51,10 @@ namespace Maplecodex2.Data.Parser
                 if (property.Attributes["slotIcon"] != null)
                 {
                     icon = property.Attributes["slotIcon"].Value != "icon0.png" ? property.Attributes["slotIcon"].Value : property.Attributes["slotIconCustom"].Value;
+                    if (icon.StartsWith("./"))
+                    {
+                        icon = icon[2..];
+                    }
                 }
                 
                 string category = "NaN";

@@ -10,7 +10,7 @@
 <nav class="container header navbar justify-content-around">
     <h2>Maplecodex2</h2>
     <form class="form-inline">
-        <input class="form-control" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" aria-label="Search">
+        <input class="form-control" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" name="result" aria-label="Search">
     </form>
 </nav>
 
@@ -36,12 +36,12 @@
 </div>
 
 @code {
-    private Item? item;
+    public static Item? item;
     private int SearchId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        item = await ItemService.GetItemAsync(0);
+        item = await ItemService.GetItemAsync(1);
     }
 
     public async Task SearchItemAsync()

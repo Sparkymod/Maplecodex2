@@ -34,10 +34,10 @@ namespace Maplecodex2
                     InitializeMetadata();
 
                     // Foreach class type Storage, GetAll items and parse them
-
+                    ItemService service = new();
                     foreach (Item item in ItemStorage.GetAll())
                     {
-                        //await Service<Item>.Manager.Add(item);
+                        await service.Add(item);
                     }
                     Log.Logger.Warning($"Saving data to Database Complete!");
 

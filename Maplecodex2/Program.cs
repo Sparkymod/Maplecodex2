@@ -34,9 +34,8 @@ app.UseSerilogRequestLogging();
 app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
-app.Run();
-
 // Initialization
 Settings.InitDatabase();
 Settings.ParseDataIntoDatabase();
+app.Run();
+
