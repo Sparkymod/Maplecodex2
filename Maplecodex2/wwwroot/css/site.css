@@ -2,7 +2,6 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #282c34;
 }
 
 h1:focus {
@@ -21,29 +20,6 @@ a, .btn-link {
 
 .content {
     padding-top: 1.1rem;
-}
-
-.container {
-    background-color: darkseagreen;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    box-shadow: 0.25rem 0.25rem black;
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: auto;
-    grid-template-areas:
-        "header"
-        "result";
-    margin-top: 1rem;
-}
-
-.header {
-    background-color: burlywood;
-    grid-area: header;
-}
-
-.results{
-    grid-area: result;
 }
 
 .center {

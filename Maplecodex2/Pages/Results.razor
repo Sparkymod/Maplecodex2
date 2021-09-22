@@ -5,35 +5,68 @@
 @using Maplecodex2.Data.Helpers
 @inject ItemService ItemService
 
-@*// Items //*@
 @page "/item"
-<nav class="container header navbar justify-content-around">
-    <h2>Maplecodex2</h2>
+
+<!-- Logo -->
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand">
+        <img src=/site_logo.png />
+    </a>
+    <!-- Search -->
     <form class="form-inline">
-        <input class="form-control" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" name="result" aria-label="Search">
+        <input class="form-control mr-sm-2" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" aria-label="Search">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#filterModal"> Search </button>
     </form>
 </nav>
 
-<div class="container results">
-    <table>
-        <thead>
-            <tr>
-                <th>Icon</th>
-                <th>ID</th>
-                <th>Type</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <img src="@item?.Icon" width="32px" height="32px" />
-                <td>@item?.Id</td>
-                <td>@item?.Type</td>
-                <td>@item?.Name</td>
-            </tr>
-        </tbody>
-    </table>
+<!-- Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Container results. -->
+<div class="container p-4">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Icon</th>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <img src="@item?.Icon" width="32px" height="32px" />
+                    <td>@item?.Id</td>
+                    <td>@item?.Type</td>
+                    <td>@item?.Name</td>
+                    <td>@item?.Category</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 @code {
     public static Item? item;

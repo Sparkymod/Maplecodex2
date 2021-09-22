@@ -338,4 +338,4 @@ Maplecodex2/Data/Xml/
 Maplecodex2/Data/Icons/Item/*.png
 Maplecodex2/Data/Icons/Item/*.jpeg
 Maplecodex2/Data/Icons/Item/*.jpg
-*.png
+Maplecodex2/wwwroot/Data/
