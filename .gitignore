@@ -334,7 +334,7 @@ ASALocalRun/
 .localhistory/
 
 # Custom
-Maplecodex2/Data/Xml/
+Maplecodex2.DBSync/Data/Xml/
 Maplecodex2/Data/Icons/Item/*.png
 Maplecodex2/Data/Icons/Item/*.jpeg
 Maplecodex2/Data/Icons/Item/*.jpg

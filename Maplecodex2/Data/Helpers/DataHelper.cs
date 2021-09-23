@@ -5,11 +5,6 @@ namespace Maplecodex2.Data.Helpers
 {
     public static class DataHelper
     {
-        public static void InitializeData()
-        {
-
-        }
-
         /// <summary>
         /// Read an xml file.
         /// </summary>
@@ -18,6 +13,8 @@ namespace Maplecodex2.Data.Helpers
         public static XmlDocument ReadDataFromXml(string filename)
         {
             FileStream stream = File.OpenRead(filename);
+            if (stream == null) { return null; }
+
             XmlDocument document = new();
             document.Load(stream);
 
@@ -27,15 +24,17 @@ namespace Maplecodex2.Data.Helpers
         /// <summary>
         /// Read all files in a directory and subdirectory.
         /// </summary>
-        /// <param name="directory">Directory path.</param>
-        /// <returns>Dictionary of folders with their files.</returns>
-        public static List<string> GetAllFilesFrom(string directory)
+        /// <param name="path">Directory path.</param>
+        /// <param name="resource">Resource you want to get all the files from.</param>
+        /// <returns>List of folders with their files.</returns>
+        public static List<string> GetAllFilesFrom(string path, string resource)
         {
-            string delimiter = $"{directory}/*.*";
+            string delimiter = $"{resource}/*.*";
             List<string> files = new();
 
-            foreach (string file in Directory.GetFiles(Paths.XML_ROOT, delimiter, SearchOption.AllDirectories))
+            foreach (string file in Directory.GetFiles(path, delimiter, SearchOption.AllDirectories))
             {
+                if (string.IsNullOrEmpty(file)) { continue; }
                 files.Add(file);
             }
 

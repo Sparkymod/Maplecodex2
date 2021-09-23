@@ -45,9 +45,7 @@ namespace Maplecodex2.Database.Core
         {
             try
             {
-                Log.Logger.Warning("Saving changes...");
                 await Context.SaveChangesAsync();
-                Log.Logger.Warning("Saved!...");
                 return true;
             }
             catch (DbUpdateException ex)

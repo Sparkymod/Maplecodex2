@@ -1,14 +1,9 @@
 using Maplecodex2.Data.Services;
 using Serilog;
 using Maplecodex2;
-using Maplecodex2.Database.Managers;
 using Maplecodex2.Database;
-using Microsoft.EntityFrameworkCore;
-using Maplecodex2.Data.Storage;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -34,8 +29,8 @@ app.UseSerilogRequestLogging();
 app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
 // Initialization
 Settings.InitDatabase();
-Settings.ParseDataIntoDatabase();
-app.Run();
 
+app.Run();

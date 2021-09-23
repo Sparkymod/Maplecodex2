@@ -1,64 +1,42 @@
-﻿using Maplecodex2.Data.Services;
-using System.Diagnostics;
-using Maplecodex2.Data.Storage;
-using Serilog;
+﻿using Serilog;
 using Serilog.Core;
 using Serilog.Sinks.SystemConsole.Themes;
 using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
 using Maplecodex2.Database.Managers;
 using Maplecodex2.Database;
-using Maplecodex2.Data.Models;
+using Maplecodex2.Data.Helpers;
 
 namespace Maplecodex2
 {
     public static class Settings
     {
-        public const bool PARSE_TO_DB = false;
-
-        public static async void ParseDataIntoDatabase()
+        public static void InitDatabase()
         {
-            if (PARSE_TO_DB)
-            {
-                Log.Logger.Warning($"ARE YOU WANT TO PARSE THE DATABASE?");
-
-                string read = Console.ReadLine();
-
-                if (read == "yes")
-                {
-                    Stopwatch timer = Stopwatch.StartNew();
-                    timer.Start();
-
-                    // Initialize Metadata
-                    Log.Logger.Information($"Initialize Metadata...");
-                    InitializeMetadata();
-
-                    // Foreach class type Storage, GetAll items and parse them
-                    ItemService service = new();
-                    foreach (Item item in ItemStorage.GetAll())
-                    {
-                        await service.Add(item);
-                    }
-                    Log.Logger.Warning($"Saving data to Database Complete!");
-
-                    timer.Stop();
-                    Log.Logger.Information($"Parse to Database finished in: {timer.Elapsed.TotalSeconds}");
-                }
-            }
+            DotEnv.Load();
+            new DatabaseManager().InitDatabase();
         }
 
-        // TODO foreach class type [Storage], get the Method {Init} to initialize them all by Reflection.
-        public static void InitializeMetadata() => ItemStorage.Init();
-
-        public static void InitDatabase() => new DatabaseManager().InitDatabase();
-
-        public static DatabaseContext GetDbContext() => new(GetOptionBuilder().Options);
-
-        public static DbContextOptionsBuilder GetOptionBuilder()        // TODO get from .Env
+        public static DatabaseContext GetDbContext()
         {
             DbContextOptionsBuilder optionsBuilder = new();
-            optionsBuilder.UseMySQL($"server=localhost;port=3306;database=ms2codex;user=root;password=admin");
-            return optionsBuilder;
+            optionsBuilder.UseMySQL(GetConnectionString());
+            return new(optionsBuilder.Options);
+        }
+
+        /// <summary>
+        /// Load Database settings.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetConnectionString()
+        {
+            string server = Environment.GetEnvironmentVariable("DB_IP");
+            string port = Environment.GetEnvironmentVariable("DB_PORT");
+            string name = Environment.GetEnvironmentVariable("DB_NAME");
+            string user = Environment.GetEnvironmentVariable("DB_USER");
+            string password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+            return $"server={server};port={port};database={name};user={user};password={password}";
         }
 
         public static Logger InitializeSerilog()
@@ -159,6 +137,33 @@ namespace Maplecodex2
                         break;
                 }
                 return 0;
+            }
+        }
+    }
+
+    // Dot Environment Settings.
+    public static class DotEnv
+    {
+        public static string? FilePath { get; set; }
+
+        public static void Load(string filepath = ".env")
+        {
+            FilePath = Path.Combine(Paths.SOLUTION_DIR, filepath);
+
+            if (!File.Exists(FilePath))
+            {
+                throw new ArgumentException(".env file not found!");
+            }
+            foreach (string line in File.ReadAllLines(FilePath))
+            {
+                string[] parts = line.Split('=', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length != 2)
+                {
+                    continue;
+                }
+
+                Environment.SetEnvironmentVariable(parts[0], parts[1]);
             }
         }
     }
