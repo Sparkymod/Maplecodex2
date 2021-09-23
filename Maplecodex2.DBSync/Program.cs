@@ -9,7 +9,7 @@ namespace Maplecodex2.DBSync
 {
     public class Program
     {
-        public async void Main(string[] args)
+        public static async void Main(string[] args)
         {
             Settings.InitializeSerilog();
             Settings.InitDatabase();
