@@ -2,9 +2,11 @@
 @using Maplecodex2.Data.Services
 @using Maplecodex2.Data.Models
 @using Maplecodex2.Data.Helpers
+@using Maplecodex2.Database.Core
+
 @inject ItemService ItemService
 
-@page "/item"
+@page "/"
 
 <!-- Logo -->
 <nav class="navbar navbar-light bg-light justify-content-between">
@@ -15,69 +17,103 @@
     <form class="form-inline">
         <input class="form-control mr-sm-2" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" aria-label="Search">
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#filterModal"> Search </button>
+        <span class="btn btn-default"> Search </span>
     </form>
 </nav>
-
-<!-- Modal -->
-<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Container results. -->
 <div class="container p-4">
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-striped pagination justify-content-center">
             <thead>
                 <tr>
                     <th>Icon</th>
                     <th>ID</th>
                     <th>Type</th>
                     <th>Name</th>
-                    <th>Category</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <img src="@item?.Icon" width="32px" height="32px" />
-                    <td>@item?.Id</td>
-                    <td>@item?.Type</td>
-                    <td>@item?.Name</td>
-                    <td>@item?.Category</td>
-                </tr>
+                @foreach (Item newItem in ItemList)
+                {
+                    <tr>
+                        <td class="col-xs-1"><img src="@newItem?.Icon" width="30vh" height="30vh" /> </td>
+                        <td class="col-xs-1">@newItem?.Id</td>
+                        <td class="col-xs-1">@newItem?.Type</td>
+                        <td class="col-xs-5">@newItem?.Name</td>
+                    </tr>
+                }
             </tbody>
+            <nav>
+                <ul class="pagination justify-content-center">
+                    @foreach (PagingLink link in Links)
+                    {
+                        <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null)">
+                            <span class="page-link" href="#">@link.Text</span>
+                        </li>
+                    }
+                </ul>
+            </nav>
         </table>
     </div>
 </div>
 
-
 @code {
-    public static Item? item;
+    public Item? item;
     private int SearchId { get; set; }
+    public List<Item>? ItemList { get; set; } = new List<Item>();
+    public PagedList<Item>? PagedLists;
+    public List<PagingLink> Links = new List<PagingLink>();
+    public int PageSize = 10;
 
+    // Initializer
     protected override async Task OnInitializedAsync()
     {
+        PagedLists = await ItemService.GetItemList(1, PageSize);
+        ItemList = PagedLists.Items;
         item = await ItemService.GetItemAsync(1);
+        CreatePaginationLinks();
     }
 
+    public void CreatePaginationLinks()
+    {
+        Links.Clear();
+        Links.Add(new PagingLink(PagedLists.CurrentPage - 1, PagedLists.HasPrevious, "Previous"));
+
+        for (int i = 1; i <= PagedLists.TotalPages; i++)
+        {
+            if (i >= PagedLists.CurrentPage && i <= PagedLists.CurrentPage + 10)
+            {
+                Links.Add(new PagingLink(i, true, i.ToString())
+                    {
+                        Active = PagedLists.CurrentPage == i
+                    });
+            }
+        }
+
+        Links.Add(new PagingLink(PagedLists.CurrentPage + 1, PagedLists.HasNext, "Next"));
+    }
+
+    // This is called by the pagination nav
+    public async Task OnSelectedPage(PagingLink link)
+    {
+        if (link.Page == PagedLists.CurrentPage || !link.Enabled) { return; }
+
+        PagedLists.CurrentPage = link.Page;
+        PagedLists = await ItemService.GetItemList(link.Page, PageSize);
+        ItemList = PagedLists.Items;
+        CreatePaginationLinks();
+    }
+
+    // TODO: Search for item in the list that match the id
     public async Task SearchItemAsync()
     {
         item = await ItemService.GetItemAsync(SearchId >= 0 ? SearchId : 1);
+    }
+
+    public async Task GetAllItems(int page)
+    {
+        List<Item> tempList = await ItemService.GetAll();
+        ItemList = tempList.Take(page).ToList();
     }
 }

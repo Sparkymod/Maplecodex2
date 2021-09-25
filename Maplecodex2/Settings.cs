@@ -49,7 +49,7 @@ namespace Maplecodex2
     // Serilog Settings.
     public static class Serilog
     {
-        public static string Template { get; set; } = "{Timestamp:HH:mm:ss} [{Level:u3}]: {Message:lj} {NewLine}" + "{Exception}";
+        public static string Template { get; set; } = "{Timestamp:HH:mm:ss} [{Level:u4}]: {Message:lj} {NewLine}" + "{Exception}";
 
         /// <summary>
         /// Custom configuration for serilog to show on console and save to file.

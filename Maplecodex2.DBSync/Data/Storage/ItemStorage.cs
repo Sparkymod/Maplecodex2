@@ -9,8 +9,6 @@ namespace Maplecodex2.DBSync.Data.Storage
 
         public static void Init() => Items = ItemParser.Parse();
 
-        public static Item GetItem(int id) => Items.GetValueOrDefault(id);
-
-        public static IEnumerable<Item> GetAll() => Items.Values;
+        public static List<Item> GetAll() => Items.Values.ToList();
     }
 }

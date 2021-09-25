@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Data\Xml\**" />
+    <Compile Remove="wwwroot\Data\**" />
     <Content Remove="Data\Xml\**" />
+    <Content Remove="wwwroot\Data\**" />
     <EmbeddedResource Remove="Data\Xml\**" />
+    <EmbeddedResource Remove="wwwroot\Data\**" />
     <None Remove="Data\Xml\**" />
+    <None Remove="wwwroot\Data\**" />
   </ItemGroup>
 
   <ItemGroup>

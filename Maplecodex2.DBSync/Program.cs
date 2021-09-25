@@ -1,5 +1,6 @@
 ﻿using Maplecodex2.Data.Models;
 using Maplecodex2.Data.Services;
+using Maplecodex2.DBSync;
 using Maplecodex2.DBSync.Data.Storage;
 using Serilog;
 using System.Diagnostics;
@@ -13,7 +14,7 @@ namespace Maplecodex2.DBSync
             Settings.InitializeSerilog();
             Settings.InitDatabase();
 
-            Log.Logger.Warning($"ARE YOU WANT TO PARSE THE DATABASE? \"yes\" to parse.");
+            Log.Logger.Warning($"DO YOU WANT TO PARSE THE DATABASE? \"yes\" to parse.".Yellow());
 
             string? read = Console.ReadLine();
             if (read != null && read.Contains("yes", StringComparison.OrdinalIgnoreCase))
@@ -25,18 +26,25 @@ namespace Maplecodex2.DBSync
                 Log.Logger.Information($"Initialize Metadata...");
                 InitializeMetadata();
 
-                Log.Logger.Information($"Metadata load!");
+                Log.Logger.Information($"Metadata loaded!".Green());
 
                 // Foreach class Type Storage, GetAll items and parse them using the same Type Services.
                 Log.Logger.Information($"Starting Database Sync... Please Wait!");
+
+                int count = 1;
                 ItemService service = new();
-                foreach (Item item in ItemStorage.GetAll())
+                List<Task> tasks = new ();
+
+                IEnumerable<Item> items = ItemStorage.GetAll();
+
+                foreach (Item item in items)
                 {
-                    await service.Add(item);
+                    tasks.Add(service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar((float)count++ / items.Count() * 100f)));
                 }
 
+                await Task.WhenAll(tasks);
                 timer.Stop();
-                Log.Logger.Information($"Parse to Database finished in: {timer.Elapsed.TotalSeconds}");
+                Log.Logger.Information($"Parse to Database finished in: {timer.Elapsed.TotalSeconds}".Green());
             }
         }
 

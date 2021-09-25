@@ -1,4 +1,5 @@
-﻿namespace Maplecodex2.Database.Core
+﻿
+namespace Maplecodex2.Database.Core
 {
     public interface IModel<T> where T : class, IEntity
     {
