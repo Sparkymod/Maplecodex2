@@ -25,7 +25,7 @@ namespace Maplecodex2.Data.Parser
 
             foreach (XmlNode? node in itemNodes)
             {
-                ConsoleUtility.WriteProgressBar((float)count++ / itemNodesCount * 100f);
+                ConsoleUtility.WriteProgressBar(count++, itemNodesCount);
 
                 // Set Item values
                 Item item = new();
@@ -47,7 +47,7 @@ namespace Maplecodex2.Data.Parser
             List<string> files = DataHelper.GetAllFilesFrom(Paths.XML_ROOT, "item");
             foreach (string file in files)
             {
-                ConsoleUtility.WriteProgressBar((float)count++ / files.Count * 100f);
+                ConsoleUtility.WriteProgressBar(count++, files.Count);
 
                 int id = int.Parse(Path.GetFileNameWithoutExtension(file));
                 if (!itemList.ContainsKey(id)) 

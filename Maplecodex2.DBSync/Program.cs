@@ -39,11 +39,11 @@ namespace Maplecodex2.DBSync
 
                 foreach (Item item in items)
                 {
-                    await Task.Run( () => service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar((float)count++ / items.Count() * 100f)));
+                    await Task.Run( () => service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar(count++, items.Count())));
                 }
 
                 timer.Stop();
-                Log.Logger.Information($"Parse to Database finished in: {timer.Elapsed.TotalSeconds}".Green());
+                Log.Logger.Information($"Parse to Database finished in: {timer.Elapsed.Minutes} minutes with {timer.Elapsed.Seconds} seconds".Green());
             }
         }
 

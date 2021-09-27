@@ -15,39 +15,40 @@ namespace Maplecodex2.DBSync
 
     public static class ConsoleUtility
     {
-        public static void WriteProgressBar(float percent)
+        public static void WriteProgressBar(int count, int itemNodesCount)
         {
+            float percent = (float)count / itemNodesCount * 100f;
             switch (percent)
             {
                 case <= 10:
-                    Console.Write("[■         ] {0,1:0}%\r".Red(), percent);
+                    Console.Write("[■         ] {0,1:0}% [{1}/{2}]\r".Red(), percent, count, itemNodesCount);
                     break;
                 case <= 20:
-                    Console.Write("[■■        ] {0,1:0}%\r".Red(), percent);
+                    Console.Write("[■■        ] {0,1:0}% [{1}/{2}]\r".Red(), percent, count, itemNodesCount);
                     break;
                 case <= 30:
-                    Console.Write("[■■■       ] {0,1:0}%\r".Orange(), percent);
+                    Console.Write("[■■■       ] {0,1:0}% [{1}/{2}]\r".Orange(), percent, count, itemNodesCount);
                     break;
                 case <= 40:
-                    Console.Write("[■■■■      ] {0,1:0}%\r".Orange(), percent);
+                    Console.Write("[■■■■      ] {0,1:0}% [{1}/{2}]\r".Orange(), percent, count, itemNodesCount);
                     break;
                 case <= 50:
-                    Console.Write("[■■■■■     ] {0,1:0}%\r".Orange(), percent);
+                    Console.Write("[■■■■■     ] {0,1:0}% [{1}/{2}]\r".Orange(), percent, count, itemNodesCount);
                     break;
                 case <= 60:
-                    Console.Write("[■■■■■■    ] {0,1:0}%\r".Yellow(), percent);
+                    Console.Write("[■■■■■■    ] {0,1:0}% [{1}/{2}]\r".Yellow(), percent, count, itemNodesCount);
                     break;
                 case <= 70:
-                    Console.Write("[■■■■■■■   ] {0,1:0}%\r".Yellow(), percent);
+                    Console.Write("[■■■■■■■   ] {0,1:0}% [{1}/{2}]\r".Yellow(), percent, count, itemNodesCount);
                     break;
                 case <= 80:
-                    Console.Write("[■■■■■■■■  ] {0,1:0}%\r".Yellow(), percent);
+                    Console.Write("[■■■■■■■■  ] {0,1:0}% [{1}/{2}]\r".Yellow(), percent, count, itemNodesCount);
                     break;
                 case <= 90:
-                    Console.Write("[■■■■■■■■■ ] {0,1:0}%\r".Green(), percent);
+                    Console.Write("[■■■■■■■■■ ] {0,1:0}% [{1}/{2}]\r".Green(), percent, count, itemNodesCount);
                     break;
                 default:
-                    Console.Write("[■■■■■■■■■■] {0,1:0}%\r".Green(), percent);
+                    Console.Write("[■■■■■■■■■■] {0,1:0}% [{1}/{2}]\r".Green(), percent, count, itemNodesCount);
                     break;
             }
         }
