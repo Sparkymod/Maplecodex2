@@ -45,11 +45,11 @@
                 }
             </tbody>
             <nav>
-                <ul class="pagination justify-content-center">
+                <ul class="pagination pagination-sm justify-content-center">
                     @foreach (PagingLink link in Links)
                     {
                         <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null)">
-                            <span class="page-link" href="#">@link.Text</span>
+                            <span class="btn-toolbar" href="#">@link.Text</span>
                         </li>
                     }
                 </ul>
@@ -72,26 +72,7 @@
         PagedLists = await ItemService.GetItemList(1, PageSize);
         ItemList = PagedLists.Items;
         item = await ItemService.GetItemAsync(1);
-        CreatePaginationLinks();
-    }
-
-    public void CreatePaginationLinks()
-    {
-        Links.Clear();
-        Links.Add(new PagingLink(PagedLists.CurrentPage - 1, PagedLists.HasPrevious, "Previous"));
-
-        for (int i = 1; i <= PagedLists.TotalPages; i++)
-        {
-            if (i >= PagedLists.CurrentPage && i <= PagedLists.CurrentPage + 10)
-            {
-                Links.Add(new PagingLink(i, true, i.ToString())
-                    {
-                        Active = PagedLists.CurrentPage == i
-                    });
-            }
-        }
-
-        Links.Add(new PagingLink(PagedLists.CurrentPage + 1, PagedLists.HasNext, "Next"));
+        DataHelper.CreatePaginationLinks(Links, PagedLists, 5);
     }
 
     // This is called by the pagination nav
@@ -102,7 +83,7 @@
         PagedLists.CurrentPage = link.Page;
         PagedLists = await ItemService.GetItemList(link.Page, PageSize);
         ItemList = PagedLists.Items;
-        CreatePaginationLinks();
+        DataHelper.CreatePaginationLinks(Links, PagedLists, 5);
     }
 
     // TODO: Search for item in the list that match the id

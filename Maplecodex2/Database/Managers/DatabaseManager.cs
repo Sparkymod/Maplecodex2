@@ -16,7 +16,10 @@ namespace Maplecodex2.Database.Managers
             if (Exists())
             {
                 Log.Information("Database already exists.");
-                return;
+                Log.Information("Dropping database...");
+                Context.Database.EnsureDeleted();
+                Log.Information("Success!");
+                InitDatabase();
             }
             Log.Information("Creating database...");
             CreateDatabase();

@@ -50,11 +50,15 @@ namespace Maplecodex2.Data.Parser
                 ConsoleUtility.WriteProgressBar((float)count++ / files.Count * 100f);
 
                 int id = int.Parse(Path.GetFileNameWithoutExtension(file));
-                if (!itemList.ContainsKey(id)) { continue; }
+                if (!itemList.ContainsKey(id)) 
+                {
+                    Console.WriteLine($"ID: {id} Not included in the itemname.xml");
+                    continue; 
+                }
 
                 // Read and save the XML in document.
                 XmlDocument? document = DataHelper.ReadDataFromXml(file);
-                if (document == null) {  continue; }
+                if (document == null) { continue; }
 
                 // Root node for start reading.
                 XmlNode? property = document.SelectSingleNode("ms2/environment/property");
@@ -72,7 +76,7 @@ namespace Maplecodex2.Data.Parser
                 }
                 
                 string category = "";
-                if(property.Attributes["category"] != null && string.IsNullOrEmpty(property.Attributes["category"].Value))
+                if (property.Attributes["category"] != null && string.IsNullOrEmpty(property.Attributes["category"].Value))
                 {
                     category = property.Attributes["category"].Value;
                 }

@@ -12,13 +12,14 @@ namespace Maplecodex2.DBSync
         public static async Task Main(string[] args)
         {
             Settings.InitializeSerilog();
-            Settings.InitDatabase();
 
             Log.Logger.Warning($"DO YOU WANT TO PARSE THE DATABASE? \"yes\" to parse.".Yellow());
 
             string? read = Console.ReadLine();
             if (read != null && read.Contains("yes", StringComparison.OrdinalIgnoreCase))
             {
+                Settings.InitDatabase();
+
                 Stopwatch timer = Stopwatch.StartNew();
                 timer.Start();
 
@@ -33,16 +34,14 @@ namespace Maplecodex2.DBSync
 
                 int count = 1;
                 ItemService service = new();
-                List<Task> tasks = new ();
 
                 IEnumerable<Item> items = ItemStorage.GetAll();
 
                 foreach (Item item in items)
                 {
-                    tasks.Add(service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar((float)count++ / items.Count() * 100f)));
+                    await Task.Run( () => service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar((float)count++ / items.Count() * 100f)));
                 }
 
-                await Task.WhenAll(tasks);
                 timer.Stop();
                 Log.Logger.Information($"Parse to Database finished in: {timer.Elapsed.TotalSeconds}".Green());
             }
