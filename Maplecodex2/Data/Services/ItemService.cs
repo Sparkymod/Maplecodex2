@@ -7,7 +7,7 @@ namespace Maplecodex2.Data.Services
     {
         public async Task<Item> GetItemAsync(int id) => await Get(id);
 
-        public async Task<PagedList<Item>> GetItemList(int pageNumber, int pageSize)
+        public async Task<PagedList<Item>> GetItemPerPage(int pageNumber, int pageSize)
         {
             List<Item>? products = await GetAll();
             int count = products.Count;

@@ -44,10 +44,9 @@ namespace Maplecodex2.Data.Helpers
         }
 
 
-        public static void CreatePaginationLinks(List<PagingLink> links, PagedList<Item> pagedLists, int paginationSize)
+        public static List<PagingLink> CreatePaginationLinks(PagedList<Item> pagedLists, int paginationSize)
         {
-            links.Clear();
-
+            List<PagingLink> links = new ();
             PagingLink newPage = new PagingLink(pagedLists.CurrentPage - 1, pagedLists.HasPrevious, "Previous");
             links.Add(newPage);
 
@@ -79,6 +78,7 @@ namespace Maplecodex2.Data.Helpers
             }
 
             links.Add(new PagingLink(pagedLists.CurrentPage + 1, pagedLists.HasNext, "Next"));
+            return links;
         }
     }
 }
