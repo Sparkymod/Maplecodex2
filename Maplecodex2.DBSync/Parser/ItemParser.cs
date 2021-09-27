@@ -14,7 +14,6 @@ namespace Maplecodex2.Data.Parser
         /// <returns>List of Item.</returns>
         public static Dictionary<int, Item> Parse()
         {
-            Log.Logger.Information($"Loading...");
             Dictionary<int, Item> itemList = new();
 
             XmlDocument itemname = DataHelper.ReadDataFromXml(Paths.XML_ITEM);
@@ -41,8 +40,9 @@ namespace Maplecodex2.Data.Parser
             }
 
             count = 1;
-            Log.Logger.Information($"{itemNodes.Count} Items successfully loaded!");
-            Log.Logger.Information($"Adding extra data to items...");
+            Log.Logger.Information($"{itemNodes.Count} Items successfully loaded!".Green());
+            Log.Logger.Information($"Adding extra data to items...\n".Yellow());
+            List<string> itemPreset = new();
 
             List<string> files = DataHelper.GetAllFilesFrom(Paths.XML_ROOT, "item");
             foreach (string file in files)
@@ -50,11 +50,6 @@ namespace Maplecodex2.Data.Parser
                 ConsoleUtility.WriteProgressBar(count++, files.Count);
 
                 int id = int.Parse(Path.GetFileNameWithoutExtension(file));
-                if (!itemList.ContainsKey(id)) 
-                {
-                    Console.WriteLine($"ID: {id} Not included in the itemname.xml");
-                    continue; 
-                }
 
                 // Read and save the XML in document.
                 XmlDocument? document = DataHelper.ReadDataFromXml(file);
@@ -62,7 +57,7 @@ namespace Maplecodex2.Data.Parser
 
                 // Root node for start reading.
                 XmlNode? property = document.SelectSingleNode("ms2/environment/property");
-                if (property == null) {  continue; }
+                if (property == null) { continue; }
 
                 // Add aditional data to the item.
                 string icon = "";
@@ -74,13 +69,35 @@ namespace Maplecodex2.Data.Parser
                         icon = icon[2..];
                     }
                 }
-                
+
                 string category = "";
                 if (property.Attributes["category"] != null && string.IsNullOrEmpty(property.Attributes["category"].Value))
                 {
                     category = property.Attributes["category"].Value;
                 }
-                
+
+                string name = "";
+                if (!itemList.ContainsKey(id))
+                {
+                    XmlNode? slot = document.SelectSingleNode("ms2/environment/slots");
+                    XmlNode? decal = slot.SelectSingleNode("slot/decal");
+                    XmlNode? asset = slot.SelectSingleNode("slot/asset");
+                    if (decal != null && decal.Attributes.Count > 0)
+                    {
+                        name = decal.Attributes["texture"].Value;
+                    }
+                    if (asset != null)
+                    {
+                        name = asset.Attributes["name"].Value;
+                    }
+
+                    category = slot.SelectSingleNode("slot").Attributes["name"].Value;
+
+                    Item item = new (id, "", name, "", "", icon, category);
+                    itemList.Add(id, item);
+                    continue;
+                }
+
                 itemList[id].Icon = icon;
                 itemList[id].Category = category;
             }

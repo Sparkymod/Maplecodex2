@@ -23,6 +23,9 @@
 
 <!-- Container results. -->
 <div class="container p-4">
+    <div class="bg-danger">
+        <p>// TODO SEARCH FILTER //</p>
+    </div>
     <div class="table-responsive">
         <table class="table table-striped pagination justify-content-center">
             <thead>
@@ -37,7 +40,14 @@
                 @foreach (Item newItem in ItemList)
                 {
                     <tr>
-                        <td class="col-xs-1"><img src="@newItem?.Icon" width="30vh" height="30vh" /> </td>
+                        @if (string.IsNullOrEmpty(@newItem.Icon))
+                        {
+                            <td class="col-xs-1"><img src="icon0.png" width="30vh" height="30vh" /> </td>
+                    }
+                        else
+                        {
+                            <td class="col-xs-1"> <img src="@newItem?.Icon" width="30vh" height="30vh" /> </td>
+                        }
                         <td class="col-xs-1">@newItem?.Id</td>
                         <td class="col-xs-1">@newItem?.Type</td>
                         <td class="col-xs-5">@newItem?.Name</td>
@@ -69,10 +79,10 @@
     // Initializer
     protected override async Task OnInitializedAsync()
     {
-        PagedLists = await ItemService.GetItemList(1, PageSize);
+        PagedLists = await ItemService.GetItemPerPage(1, PageSize);
         ItemList = PagedLists.Items;
         item = await ItemService.GetItemAsync(1);
-        DataHelper.CreatePaginationLinks(Links, PagedLists, 5);
+        Links = DataHelper.CreatePaginationLinks(PagedLists, 5);
     }
 
     // This is called by the pagination nav
@@ -81,9 +91,9 @@
         if (link.Page == PagedLists.CurrentPage || !link.Enabled) { return; }
 
         PagedLists.CurrentPage = link.Page;
-        PagedLists = await ItemService.GetItemList(link.Page, PageSize);
+        PagedLists = await ItemService.GetItemPerPage(link.Page, PageSize);
         ItemList = PagedLists.Items;
-        DataHelper.CreatePaginationLinks(Links, PagedLists, 5);
+        Links = DataHelper.CreatePaginationLinks(PagedLists, 5);
     }
 
     // TODO: Search for item in the list that match the id

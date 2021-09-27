@@ -24,22 +24,22 @@ namespace Maplecodex2.DBSync
                 timer.Start();
 
                 // Initialize Metadata
-                Log.Logger.Information($"Initialize Metadata...");
+                Log.Logger.Information($"Initialize Metadata...\n".Yellow());
                 InitializeMetadata();
 
                 Log.Logger.Information($"Metadata loaded!".Green());
 
                 // Foreach class Type Storage, GetAll items and parse them using the same Type Services.
-                Log.Logger.Information($"Starting Database Sync... Please Wait!");
+                Log.Logger.Information($"Starting Database Sync... Please Wait!\n");
 
                 int count = 1;
                 ItemService service = new();
 
-                IEnumerable<Item> items = ItemStorage.GetAll();
+                IEnumerable<Item> items = ItemStorage.GetAll().OrderBy(i => i.Id);
 
                 foreach (Item item in items)
                 {
-                    await Task.Run( () => service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar(count++, items.Count())));
+                    await service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar(count++, items.Count()));
                 }
 
                 timer.Stop();
