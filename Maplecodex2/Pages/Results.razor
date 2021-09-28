@@ -9,7 +9,7 @@
 @page "/"
 
 <!-- Logo -->
-<nav class="container navbar navbar-light">
+<nav class="container navbar">
     <a><img src=/site_logo.png /></a>
 </nav>
 
@@ -18,7 +18,7 @@
     <div class="form-inline">
         <!-- Search -->
         <form>
-            <input class="form-control mr-sm-2" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" aria-label="Search">
+            <input class="form-control mr-sm-2" @bind-value=SearchId @oninput="() => SearchItemAsync()" type="search" placeholder="type id, e.g 10200001" aria-label="Search">
             <!-- Button trigger modal -->
             <span class="btn btn-default"> Search </span>
 
@@ -71,7 +71,7 @@
             <ul class="pagination pagination-sm justify-content-center">
                 @foreach (PagingLink link in Links)
                 {
-                    <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null)">
+                    <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
                         <span class="btn-toolbar" href="#">@link.Text</span>
                     </li>
                 }

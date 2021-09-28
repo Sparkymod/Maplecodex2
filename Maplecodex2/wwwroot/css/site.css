@@ -1,5 +1,31 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+/* CSS HEX */
+* {
+    --sushi: #7ead38;
+    --cod-green: #08110a;
+    --woodland: #3a5523;
+    --yukon-gold: #5c6c04;
+    --stromboli: #376450;
+    --black-olive: #232f16;
+    --lochinvar: #248373;
+    --camouflage: #343c10;
+    --timber-green: #1e3530;
+}
+
+.navbar {
+    background-color: var(--sushi);
+    box-shadow: -1px 4px 9px -6px rgba(0,0,0,0.78);
+    -webkit-box-shadow: -1px 4px 9px -6px rgba(0,0,0,0.78);
+    -moz-box-shadow: -1px 4px 9px -6px rgba(0,0,0,0.78);
+    margin: -1px;
+}
+
+    .navbar > a > img {
+        margin-bottom: 1.5rem;
+        margin-top: 0.5rem;
+    }
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -16,10 +42,6 @@ a, .btn-link {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
-}
-
-.content {
-    padding-top: 1.1rem;
 }
 
 .center {
