@@ -7,11 +7,20 @@ namespace Maplecodex2.Data.Services
     {
         public async Task<Item> GetItemAsync(int id) => await Get(id);
 
-        public async Task<PagedList<Item>> GetItemPerPage(int pageNumber, int pageSize)
+        public async Task<PagedList<Item>> GetItemsPerPage(int pageNumber, int pageSize)
         {
             List<Item>? products = await GetAll();
             int count = products.Count;
             List<Item>? items = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            return new PagedList<Item>(items, count, pageNumber, pageSize);
+        }
+
+        public async Task<PagedList<Item>> GetItemPerPageById(int id, int pageNumber, int pageSize)
+        {
+            List<Item>? products = await GetAll();
+            List<Item>? matchItems = products.FindAll(item => item.Id.ToString().Contains(id.ToString()));
+            List<Item>? items = matchItems.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            int count = matchItems.Count;
             return new PagedList<Item>(items, count, pageNumber, pageSize);
         }
     }

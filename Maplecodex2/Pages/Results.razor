@@ -18,11 +18,12 @@
     <div class="form-inline">
         <!-- Search -->
         <form>
-            <input class="form-control mr-sm-2" @bind-value=SearchId @oninput="() => SearchItemAsync()" type="search" placeholder="type id, e.g 10200001" aria-label="Search">
+            <input class="form-control mr-sm-2" @bind-value="@Id" type="search" placeholder="type id, e.g 10200001" aria-label="Search">
             <!-- Button trigger modal -->
-            <span class="btn btn-default"> Search </span>
+            <span tabindex="0" class="btn btn-default"> Search </span>
 
-            <label style="padding-left: 1vh;"> Show
+            <label style="padding-left: 1vh;">
+                Show
                 <select aria-controls="ItemTable" class="form-inline input-sm">
                     <option value="10">10</option>
                     <option value="25">25</option>
@@ -49,7 +50,7 @@
                 @foreach (Item newItem in ItemList)
                 {
                     <tr role="row">
-                        @if (string.IsNullOrEmpty(@newItem.Icon))
+                        @if (string.IsNullOrEmpty(@newItem?.Icon))
                         {
                             <td class="col-xs-1"><img src="icon0.png" width="30vh" height="30vh" /> </td>
                         }
@@ -81,40 +82,30 @@
 </div>
 
 @code {
-    private int SearchId { get; set; }
-    public List<Item>? ItemList { get; set; } = new List<Item>();
-    public PagedList<Item>? PagedLists;
-    public List<PagingLink> Links = new List<PagingLink>();
+    public int Id { get; set; }
+
+    public List<Item>? ItemList;
+    public PagedList<Item>? PagedList;
+    public List<PagingLink>? Links;
     public int PageSize = 10;
 
     // Initializer
     protected override async Task OnInitializedAsync()
     {
-        PagedLists = await ItemService.GetItemPerPage(1, PageSize);
-        ItemList = PagedLists.Items;
-        Links = DataHelper.CreatePaginationLinks(PagedLists, 5);
+        PagedList = await ItemService.GetItemsPerPage(1, PageSize);
+        ItemList = PagedList.Items;
+        Links = DataHelper.CreatePaginationLinks(PagedList, 5);
     }
 
     // This is called by the pagination nav
     public async Task OnSelectedPage(PagingLink link)
     {
-        if (link.Page == PagedLists.CurrentPage || !link.Enabled) { return; }
+        if (link.Page == PagedList.CurrentPage || !link.Enabled) { return; }
 
-        PagedLists.CurrentPage = link.Page;
-        PagedLists = await ItemService.GetItemPerPage(link.Page, PageSize);
-        ItemList = PagedLists.Items;
-        Links = DataHelper.CreatePaginationLinks(PagedLists, 5);
-    }
-
-    // TODO: Search for item in the list that match the id
-    public async Task SearchItemAsync()
-    {
-
-    }
-
-    public async Task GetAllItems(int page)
-    {
-        List<Item> tempList = await ItemService.GetAll();
-        ItemList = tempList.Take(page).ToList();
+        PagedList.CurrentPage = link.Page;
+        PagedList = Id > 0 ? await ItemService.GetItemPerPageById(Id, link.Page, PageSize) : await ItemService.GetItemsPerPage(link.Page, PageSize);
+        ItemList = PagedList.Items;
+        Links.Clear();
+        Links = DataHelper.CreatePaginationLinks(PagedList, 5);
     }
 }
