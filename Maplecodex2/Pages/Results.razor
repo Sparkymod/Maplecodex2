@@ -9,41 +9,50 @@
 @page "/"
 
 <!-- Logo -->
-<nav class="navbar navbar-light bg-light justify-content-between">
-    <a class="navbar-brand">
-        <img src=/site_logo.png />
-    </a>
-    <!-- Search -->
-    <form class="form-inline">
-        <input class="form-control mr-sm-2" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" aria-label="Search">
-        <!-- Button trigger modal -->
-        <span class="btn btn-default"> Search </span>
-    </form>
+<nav class="container navbar navbar-light">
+    <a><img src=/site_logo.png /></a>
 </nav>
 
 <!-- Container results. -->
-<div class="container p-4">
-    <div class="bg-danger">
-        <p>// TODO SEARCH FILTER //</p>
+<div class="container">
+    <div class="form-inline">
+        <!-- Search -->
+        <form>
+            <input class="form-control mr-sm-2" @bind-value=SearchId @bind-value:event="oninput" onclick=@SearchItemAsync() type="search" placeholder="type id, e.g 10200001" aria-label="Search">
+            <!-- Button trigger modal -->
+            <span class="btn btn-default"> Search </span>
+
+            <label style="padding-left: 1vh;"> Show
+                <select aria-controls="ItemTable" class="form-inline input-sm">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </label>
+
+        </form>
     </div>
-    <div class="table-responsive">
-        <table class="table table-striped pagination justify-content-center">
+    <!-- Item Datatable -->
+    <div class="" style="width: auto;" id="ItemTable_Wrapper">
+        <table class="table table-responsive table-striped table-bordered dataTable dtr-inline pagination justify-content-center" id="ItemTable">
             <thead>
-                <tr>
-                    <th>Icon</th>
-                    <th>ID</th>
-                    <th>Type</th>
-                    <th>Name</th>
+                <tr role="row">
+                    <th class="" rowspan="1" colspan="1">Icon</th>
+                    <th class="sorting" rowspan="1" colspan="1">ID</th>
+                    <th class="sorting" rowspan="1" colspan="1">Type</th>
+                    <th class="sorting" rowspan="1" colspan="1">Name</th>
+                    <th class="sorting" rowspan="1" colspan="1">Feature</th>
+                    <th class="sorting" rowspan="1" colspan="1">Category</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (Item newItem in ItemList)
                 {
-                    <tr>
+                    <tr role="row">
                         @if (string.IsNullOrEmpty(@newItem.Icon))
                         {
                             <td class="col-xs-1"><img src="icon0.png" width="30vh" height="30vh" /> </td>
-                    }
+                        }
                         else
                         {
                             <td class="col-xs-1"> <img src="@newItem?.Icon" width="30vh" height="30vh" /> </td>
@@ -51,25 +60,27 @@
                         <td class="col-xs-1">@newItem?.Id</td>
                         <td class="col-xs-1">@newItem?.Type</td>
                         <td class="col-xs-5">@newItem?.Name</td>
+                        <td class="col-xs-1">@newItem?.Feature</td>
+                        <td class="col-xs-1">@newItem?.Category</td>
                     </tr>
                 }
             </tbody>
-            <nav>
-                <ul class="pagination pagination-sm justify-content-center">
-                    @foreach (PagingLink link in Links)
-                    {
-                        <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null)">
-                            <span class="btn-toolbar" href="#">@link.Text</span>
-                        </li>
-                    }
-                </ul>
-            </nav>
         </table>
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination pagination-sm justify-content-center">
+                @foreach (PagingLink link in Links)
+                {
+                    <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null)">
+                        <span class="btn-toolbar" href="#">@link.Text</span>
+                    </li>
+                }
+            </ul>
+        </nav>
     </div>
 </div>
 
 @code {
-    public Item? item;
     private int SearchId { get; set; }
     public List<Item>? ItemList { get; set; } = new List<Item>();
     public PagedList<Item>? PagedLists;
@@ -81,7 +92,6 @@
     {
         PagedLists = await ItemService.GetItemPerPage(1, PageSize);
         ItemList = PagedLists.Items;
-        item = await ItemService.GetItemAsync(1);
         Links = DataHelper.CreatePaginationLinks(PagedLists, 5);
     }
 
@@ -99,7 +109,7 @@
     // TODO: Search for item in the list that match the id
     public async Task SearchItemAsync()
     {
-        item = await ItemService.GetItemAsync(SearchId >= 0 ? SearchId : 1);
+
     }
 
     public async Task GetAllItems(int page)
