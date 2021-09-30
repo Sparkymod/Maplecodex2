@@ -11,11 +11,11 @@ namespace Maplecodex2.Data.Models
         public string? Feature { get; set; }
         public string? Locale { get; set; }
         public string? Icon { get; set; }
-        public string? Category { get; set; }
+        public string? Slot { get; set; }
 
         public Item() { }
 
-        public Item(int id, string type, string name, string feature, string locale, string icon, string category)
+        public Item(int id, string type, string name, string feature, string locale, string icon, string slot)
         {
             Id = id;
             Type = type;
@@ -23,7 +23,7 @@ namespace Maplecodex2.Data.Models
             Feature = feature;
             Locale = locale;
             Icon = icon;
-            Category = category;
+            Slot = slot;
         }
 
         public static void Build(EntityTypeBuilder<Item> entity) // EF Core builder
@@ -36,10 +36,10 @@ namespace Maplecodex2.Data.Models
             entity.Property(item => item.Feature).HasMaxLength(255);
             entity.Property(item => item.Locale).HasMaxLength(255);
             entity.Property(item => item.Icon).HasMaxLength(255);
-            entity.Property(item => item.Category).HasMaxLength(255);
+            entity.Property(item => item.Slot).HasMaxLength(255);
         }
 
-        public override string ToString() => $"Id: {Id}, Name: {Name}, Class: {Type}, Category: {Category}, Feature: {Feature}"
+        public override string ToString() => $"Id: {Id}, Name: {Name}, Class: {Type}, Slot: {Slot}, Feature: {Feature}"
             + $", Locale: {Locale}, IconPath: {Icon}";
     }
 }

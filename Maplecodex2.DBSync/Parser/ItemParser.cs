@@ -57,6 +57,7 @@ namespace Maplecodex2.Data.Parser
 
                 // Root node for start reading.
                 XmlNode? property = document.SelectSingleNode("ms2/environment/property");
+                XmlNode? slotNode = document.SelectSingleNode("ms2/environment/slots");
                 if (property == null) 
                 { 
                     continue; 
@@ -73,18 +74,13 @@ namespace Maplecodex2.Data.Parser
                     }
                 }
 
-                string category = "";
-                if (property.Attributes["category"] != null && string.IsNullOrEmpty(property.Attributes["category"].Value))
-                {
-                    category = property.Attributes["category"].Value;
-                }
+                string slot = slotNode.SelectSingleNode("slot").Attributes["name"].Value;
 
                 string name = "";
                 if (!itemList.ContainsKey(id))
                 {
-                    XmlNode? slot = document.SelectSingleNode("ms2/environment/slots");
-                    XmlNode? decal = slot.SelectSingleNode("slot/decal");
-                    XmlNode? asset = slot.SelectSingleNode("slot/asset");
+                    XmlNode? decal = slotNode.SelectSingleNode("slot/decal");
+                    XmlNode? asset = slotNode.SelectSingleNode("slot/asset");
                     if (decal != null && decal.Attributes.Count > 0)
                     {
                         name = decal.Attributes["texture"].Value;
@@ -94,15 +90,15 @@ namespace Maplecodex2.Data.Parser
                         name = asset.Attributes["name"].Value;
                     }
 
-                    category = slot.SelectSingleNode("slot").Attributes["name"].Value;
-                    Item item = new (id, "", name, "", "", icon, category);
+                    slot = slotNode.SelectSingleNode("slot").Attributes["name"].Value;
+                    Item item = new (id, "", name, "", "", icon, slot);
                     itemList.Add(id, item);
 
                     continue;
                 }
 
                 itemList[id].Icon = icon;
-                itemList[id].Category = category;
+                itemList[id].Slot = slot;
             }
 
             return itemList;
