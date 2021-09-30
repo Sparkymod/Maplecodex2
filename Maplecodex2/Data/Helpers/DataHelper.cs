@@ -16,11 +16,13 @@ namespace Maplecodex2.Data.Helpers
         public static XmlDocument ReadDataFromXml(string filename)
         {
             FileStream stream = File.OpenRead(filename);
-            if (stream == null) { return null; }
+            if (stream == null) 
+            { 
+                return null; 
+            }
 
             XmlDocument document = new();
             document.Load(stream);
-
             return document;
         }
 
@@ -34,23 +36,24 @@ namespace Maplecodex2.Data.Helpers
         {
             string delimiter = $"{resource}/*.*";
             List<string> files = new();
-
             foreach (string file in Directory.GetFiles(path, delimiter, SearchOption.AllDirectories))
             {
-                if (string.IsNullOrEmpty(file)) { continue; }
+                if (string.IsNullOrEmpty(file)) 
+                {
+                    continue; 
+                }
                 files.Add(file);
             }
-
             return files;
         }
 
         public static List<PagingLink> CreatePaginationLinks(PagedList<Item> pagedItemList, int paginationSize)
         {
             List<PagingLink> links = new ();
-            PagingLink newPage = new PagingLink(pagedItemList.CurrentPage - 1, pagedItemList.HasPrevious, "Previous");
-            links.Add(newPage);
+            PagingLink newPage = new (pagedItemList.CurrentPage - 1, pagedItemList.HasPrevious, "Previous");
 
-            newPage = new PagingLink(1, pagedItemList.HasPrevious, "First");
+            links.Add(newPage);
+            newPage = new (1, pagedItemList.HasPrevious, "First");
             links.Add(newPage);
 
             for (int pageNumber = 1; pageNumber <= pagedItemList.TotalPages; pageNumber++)
@@ -58,22 +61,20 @@ namespace Maplecodex2.Data.Helpers
                 if (pageNumber >= pagedItemList.CurrentPage - paginationSize && pageNumber <= pagedItemList.CurrentPage + paginationSize)
                 {
                     // Add new page
-                    newPage = new PagingLink(pageNumber, true, pageNumber.ToString()) { Active = pagedItemList.CurrentPage == pageNumber };
+                    newPage = new (pageNumber, true, pageNumber.ToString()) { Active = pagedItemList.CurrentPage == pageNumber };
                     links.Add(newPage);
 
                     if (pageNumber == pagedItemList.CurrentPage + paginationSize)
                     {
-                        newPage = new PagingLink(pageNumber, false, "...");
+                        newPage = new (pageNumber, false, "...");
                         links.Add(newPage);
-                        
                         // Show the last page available
-                        newPage = new PagingLink(pagedItemList.TotalPages, true, "Last") { Active = pagedItemList.CurrentPage == pagedItemList.TotalPages };
+                        newPage = new (pagedItemList.TotalPages, true, "Last") { Active = pagedItemList.CurrentPage == pagedItemList.TotalPages };
                         links.Add(newPage);
                     }
                 }
             }
-
-            newPage = new PagingLink(pagedItemList.CurrentPage + 1, pagedItemList.HasNext, "Next");
+            newPage = new (pagedItemList.CurrentPage + 1, pagedItemList.HasNext, "Next");
             links.Add(newPage);
             return links;
         }
