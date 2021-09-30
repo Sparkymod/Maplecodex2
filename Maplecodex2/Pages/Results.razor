@@ -6,13 +6,6 @@
 
 @inject ItemService ItemService
 
-@page "/"
-
-<!-- Logo -->
-<nav class="container navbar">
-    <a><img src=/site_logo.png /></a>
-</nav>
-
 <!-- Container results. -->
 <div class="container">
     <div class="form-inline">
@@ -82,7 +75,6 @@
 
 @code {
     public int Id { get; set; }
-
     public List<Item>? ItemList;
     public PagedList<Item>? PagedList;
     public List<PagingLink>? Links;

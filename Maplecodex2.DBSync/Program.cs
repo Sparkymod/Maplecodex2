@@ -1,9 +1,8 @@
-﻿using Maplecodex2.Data.Models;
+﻿using Maplecodex2.Data.Helpers;
+using Maplecodex2.Data.Models;
 using Maplecodex2.Data.Services;
-using Maplecodex2.DBSync;
 using Maplecodex2.DBSync.Data.Storage;
 using Serilog;
-using System.Diagnostics;
 
 namespace Maplecodex2.DBSync
 {
@@ -19,9 +18,7 @@ namespace Maplecodex2.DBSync
             if (read != null && read.Contains("yes", StringComparison.OrdinalIgnoreCase))
             {
                 Settings.InitDatabase();
-
-                Stopwatch timer = Stopwatch.StartNew();
-                timer.Start();
+                Timerwatch.Start();
 
                 // Initialize Metadata
                 Log.Logger.Information($"Initialize Metadata...\n".Yellow());
@@ -42,8 +39,7 @@ namespace Maplecodex2.DBSync
                     await service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar(count++, items.Count()));
                 }
 
-                timer.Stop();
-                Log.Logger.Information($"Parse to Database finished in: {timer.Elapsed.Minutes} minutes with {timer.Elapsed.Seconds} seconds".Green());
+                Timerwatch.Stop();
             }
         }
 

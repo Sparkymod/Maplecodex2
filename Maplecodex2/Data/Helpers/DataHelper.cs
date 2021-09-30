@@ -1,7 +1,8 @@
 ﻿using Maplecodex2.Data.Models;
 using Maplecodex2.Database.Core;
+using Serilog;
+using System.Diagnostics;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace Maplecodex2.Data.Helpers
 {
@@ -43,7 +44,6 @@ namespace Maplecodex2.Data.Helpers
             return files;
         }
 
-
         public static List<PagingLink> CreatePaginationLinks(PagedList<Item> pagedItemList, int paginationSize)
         {
             List<PagingLink> links = new ();
@@ -76,6 +76,23 @@ namespace Maplecodex2.Data.Helpers
             newPage = new PagingLink(pagedItemList.CurrentPage + 1, pagedItemList.HasNext, "Next");
             links.Add(newPage);
             return links;
+        }
+    }
+
+    public static class Timerwatch
+    {
+        private static Stopwatch? Watch { get; set; }
+
+        public static void Start()
+        {
+            Watch = new Stopwatch();
+            Watch.Start();
+        }
+
+        public static void Stop()
+        {
+            Watch.Stop();
+            Log.Logger.Information($"\nTimer finished in: {Watch.Elapsed.Minutes} minutes {Watch.Elapsed.Seconds} seconds.");
         }
     }
 }

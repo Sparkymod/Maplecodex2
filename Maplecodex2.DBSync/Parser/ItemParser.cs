@@ -1,8 +1,8 @@
-﻿using Maplecodex2.Data.Models;
-using Maplecodex2.Data.Helpers;
-using System.Xml;
+﻿using Maplecodex2.Data.Helpers;
+using Maplecodex2.Data.Models;
 using Maplecodex2.DBSync;
 using Serilog;
+using System.Xml;
 
 namespace Maplecodex2.Data.Parser
 {
