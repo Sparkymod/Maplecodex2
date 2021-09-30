@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using System.Linq;
-
-namespace Maplecodex2.Data.Helpers
+﻿namespace Maplecodex2.Data.Helpers
 {
     public static class Paths
     {

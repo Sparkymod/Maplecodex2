@@ -1,7 +1,8 @@
 ﻿using Maplecodex2.Data.Models;
 using Maplecodex2.Database.Core;
+using Serilog;
+using System.Diagnostics;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace Maplecodex2.Data.Helpers
 {
@@ -43,42 +44,55 @@ namespace Maplecodex2.Data.Helpers
             return files;
         }
 
-
-        public static List<PagingLink> CreatePaginationLinks(PagedList<Item> pagedLists, int paginationSize)
+        public static List<PagingLink> CreatePaginationLinks(PagedList<Item> pagedItemList, int paginationSize)
         {
             List<PagingLink> links = new ();
-            PagingLink newPage = new PagingLink(pagedLists.CurrentPage - 1, pagedLists.HasPrevious, "Previous");
+            PagingLink newPage = new PagingLink(pagedItemList.CurrentPage - 1, pagedItemList.HasPrevious, "Previous");
             links.Add(newPage);
 
-            for (int pageNumber = 1; pageNumber <= pagedLists.TotalPages; pageNumber++)
-            {
-                if (pageNumber >= pagedLists.CurrentPage && pageNumber <= pagedLists.CurrentPage + paginationSize)
-                {
-                    // Return the the first page if the current page is in the last one
-                    if (pageNumber == pagedLists.TotalPages)
-                    {
-                        newPage = new PagingLink(1, true, "1") { Active = pagedLists.CurrentPage == 1 };
-                        links.Add(newPage);
-                    }
+            newPage = new PagingLink(1, pagedItemList.HasPrevious, "First");
+            links.Add(newPage);
 
+            for (int pageNumber = 1; pageNumber <= pagedItemList.TotalPages; pageNumber++)
+            {
+                if (pageNumber >= pagedItemList.CurrentPage - paginationSize && pageNumber <= pagedItemList.CurrentPage + paginationSize)
+                {
                     // Add new page
-                    newPage = new PagingLink(pageNumber, true, pageNumber.ToString()) { Active = pagedLists.CurrentPage == pageNumber };
+                    newPage = new PagingLink(pageNumber, true, pageNumber.ToString()) { Active = pagedItemList.CurrentPage == pageNumber };
                     links.Add(newPage);
 
-                    if (pageNumber == pagedLists.CurrentPage + paginationSize)
+                    if (pageNumber == pagedItemList.CurrentPage + paginationSize)
                     {
-                        newPage = new PagingLink(pageNumber, true, "...") { Active = pagedLists.CurrentPage == pageNumber };
+                        newPage = new PagingLink(pageNumber, false, "...");
                         links.Add(newPage);
                         
                         // Show the last page available
-                        newPage = new PagingLink(pagedLists.TotalPages, true, pagedLists.TotalPages.ToString()) { Active = pagedLists.CurrentPage == pagedLists.TotalPages };
+                        newPage = new PagingLink(pagedItemList.TotalPages, true, "Last") { Active = pagedItemList.CurrentPage == pagedItemList.TotalPages };
                         links.Add(newPage);
                     }
                 }
             }
 
-            links.Add(new PagingLink(pagedLists.CurrentPage + 1, pagedLists.HasNext, "Next"));
+            newPage = new PagingLink(pagedItemList.CurrentPage + 1, pagedItemList.HasNext, "Next");
+            links.Add(newPage);
             return links;
+        }
+    }
+
+    public static class Timerwatch
+    {
+        private static Stopwatch? Watch { get; set; }
+
+        public static void Start()
+        {
+            Watch = new Stopwatch();
+            Watch.Start();
+        }
+
+        public static void Stop()
+        {
+            Watch.Stop();
+            Log.Logger.Information($"\nTimer finished in: {Watch.Elapsed.Minutes} minutes {Watch.Elapsed.Seconds} seconds.");
         }
     }
 }

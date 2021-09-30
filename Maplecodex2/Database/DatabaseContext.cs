@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Maplecodex2.Data.Models;
+﻿using Maplecodex2.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Maplecodex2.Database
 {

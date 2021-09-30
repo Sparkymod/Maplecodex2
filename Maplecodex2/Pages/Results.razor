@@ -6,21 +6,13 @@
 
 @inject ItemService ItemService
 
-@page "/"
-
-<!-- Logo -->
-<nav class="container navbar">
-    <a><img src=/site_logo.png /></a>
-</nav>
-
 <!-- Container results. -->
 <div class="container">
     <div class="form-inline">
         <!-- Search -->
         <form>
+            <span class=""> Search ID: </span>
             <input class="form-control mr-sm-2" @bind-value="@Id" type="search" placeholder="type id, e.g 10200001" aria-label="Search">
-            <!-- Button trigger modal -->
-            <span tabindex="0" class="btn btn-default"> Search </span>
 
             <label style="padding-left: 1vh;">
                 Show
@@ -72,7 +64,7 @@
             <ul class="pagination pagination-sm justify-content-center">
                 @foreach (PagingLink link in Links)
                 {
-                    <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
+                    <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Hidden ? "hidden" : null) @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
                         <span class="btn-toolbar" href="#">@link.Text</span>
                     </li>
                 }
@@ -83,7 +75,6 @@
 
 @code {
     public int Id { get; set; }
-
     public List<Item>? ItemList;
     public PagedList<Item>? PagedList;
     public List<PagingLink>? Links;

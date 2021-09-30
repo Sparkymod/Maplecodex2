@@ -1,6 +1,6 @@
+using Maplecodex2;
 using Maplecodex2.Data.Services;
 using Serilog;
-using Maplecodex2;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
