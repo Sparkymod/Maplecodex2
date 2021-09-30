@@ -3,6 +3,7 @@
 @using Maplecodex2.Data.Models
 @using Maplecodex2.Data.Helpers
 @using Maplecodex2.Database.Core
+@using Microsoft.AspNetCore.Mvc
 
 @inject ItemService ItemService
 
@@ -12,11 +13,11 @@
         <!-- Search -->
         <form>
             <span class=""> Search ID: </span>
-            <input class="form-control mr-sm-2" @bind-value="@Id" type="search" placeholder="type id, e.g 10200001" aria-label="Search">
+            <input class="form-control mr-sm-2" @bind-value="@Id" @bind-value:event="oninput" type="search" placeholder="type id, e.g 10200001" aria-label="Search">
 
             <label style="padding-left: 1vh;">
                 Show
-                <select aria-controls="ItemTable" class="form-inline input-sm">
+                <select @bind="@PageSize" onselect="@OnClick()" aria-controls="ItemTable" class="form-inline input-sm">
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -74,18 +75,24 @@
 </div>
 
 @code {
+    [BindProperty]
+    public int PageSize { get; set; }
     public int Id { get; set; }
+
     public List<Item>? ItemList;
     public PagedList<Item>? PagedList;
     public List<PagingLink>? Links;
-    public int PageSize = 10;
+    public PagingLink? CurrentLink;
 
     // Initializer
     protected override async Task OnInitializedAsync()
     {
+        Id = 0;
+        PageSize = 10;
         PagedList = await ItemService.GetItemsPerPage(1, PageSize);
         ItemList = PagedList.Items;
         Links = DataHelper.CreatePaginationLinks(PagedList, 5);
+        CurrentLink = Links.FirstOrDefault();
     }
 
     // This is called by the pagination nav
@@ -93,8 +100,18 @@
     {
         if (link.Page == PagedList.CurrentPage || !link.Enabled) { return; }
 
+        CurrentLink = link;
         PagedList.CurrentPage = link.Page;
+
         PagedList = Id > 0 ? await ItemService.GetItemPerPageById(Id, link.Page, PageSize) : await ItemService.GetItemsPerPage(link.Page, PageSize);
+        ItemList = PagedList.Items;
+        Links.Clear();
+        Links = DataHelper.CreatePaginationLinks(PagedList, 5);
+    }
+
+    public async Task OnClick()
+    {
+        PagedList = Id > 0 ? await ItemService.GetItemPerPageById(Id, CurrentLink.Page, PageSize) : await ItemService.GetItemsPerPage(CurrentLink.Page, PageSize);
         ItemList = PagedList.Items;
         Links.Clear();
         Links = DataHelper.CreatePaginationLinks(PagedList, 5);

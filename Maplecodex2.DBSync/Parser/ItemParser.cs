@@ -15,13 +15,11 @@ namespace Maplecodex2.Data.Parser
         public static Dictionary<int, Item> Parse()
         {
             Dictionary<int, Item> itemList = new();
-
             XmlDocument itemname = DataHelper.ReadDataFromXml(Paths.XML_ITEM);
             XmlNodeList? itemNodes = itemname.SelectNodes("ms2/key");
 
             int count = 1;
             int itemNodesCount = itemNodes.Count;
-
             foreach (XmlNode? node in itemNodes)
             {
                 ConsoleUtility.WriteProgressBar(count++, itemNodesCount);
@@ -50,14 +48,19 @@ namespace Maplecodex2.Data.Parser
                 ConsoleUtility.WriteProgressBar(count++, files.Count);
 
                 int id = int.Parse(Path.GetFileNameWithoutExtension(file));
-
                 // Read and save the XML in document.
                 XmlDocument? document = DataHelper.ReadDataFromXml(file);
-                if (document == null) { continue; }
+                if (document == null) 
+                {
+                    continue; 
+                }
 
                 // Root node for start reading.
                 XmlNode? property = document.SelectSingleNode("ms2/environment/property");
-                if (property == null) { continue; }
+                if (property == null) 
+                { 
+                    continue; 
+                }
 
                 // Add aditional data to the item.
                 string icon = "";
@@ -92,9 +95,9 @@ namespace Maplecodex2.Data.Parser
                     }
 
                     category = slot.SelectSingleNode("slot").Attributes["name"].Value;
-
                     Item item = new (id, "", name, "", "", icon, category);
                     itemList.Add(id, item);
+
                     continue;
                 }
 
