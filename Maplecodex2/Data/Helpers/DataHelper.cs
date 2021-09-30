@@ -60,7 +60,7 @@ namespace Maplecodex2.Data.Helpers
 
             for (int pageNumber = 1; pageNumber <= pagedItemList.TotalPages; pageNumber++)
             {
-                if (pageNumber >= pagedItemList.CurrentPage - paginationSize && pageNumber <= pagedItemList.CurrentPage + paginationSize)
+                if (pageNumber >= pagedItemList.CurrentPage && pageNumber <= pagedItemList.CurrentPage + paginationSize)
                 {
                     // Add new page
                     newPage = new(pageNumber, true, pageNumber.ToString()) { Active = pagedItemList.CurrentPage == pageNumber };
