@@ -36,6 +36,7 @@ namespace Maplecodex2.Data.Helpers
         {
             string delimiter = $"{resource}/*.*";
             List<string> files = new();
+
             foreach (string file in Directory.GetFiles(path, delimiter, SearchOption.AllDirectories))
             {
                 if (string.IsNullOrEmpty(file)) 
@@ -74,6 +75,7 @@ namespace Maplecodex2.Data.Helpers
                     }
                 }
             }
+
             newPage = new (pagedItemList.CurrentPage + 1, pagedItemList.HasNext, "Next");
             links.Add(newPage);
             return links;

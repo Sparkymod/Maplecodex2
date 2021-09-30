@@ -12,6 +12,7 @@ namespace Maplecodex2.Data.Services
             List<Item>? products = await GetAll();
             int count = products.Count;
             List<Item>? items = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
             return new PagedList<Item>(items, count, pageNumber, pageSize);
         }
 
@@ -21,6 +22,7 @@ namespace Maplecodex2.Data.Services
             List<Item>? matchItems = products.FindAll(item => item.Id.ToString().Contains(id.ToString()));
             List<Item>? items = matchItems.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             int count = matchItems.Count;
+
             return new PagedList<Item>(items, count, pageNumber, pageSize);
         }
     }
