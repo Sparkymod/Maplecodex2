@@ -25,5 +25,15 @@ namespace Maplecodex2.Data.Services
 
             return new PagedList<Item>(items, count, pageNumber, pageSize);
         }
+
+        public async Task<PagedList<Item>> GetItemPerPageByName(string name, int pageNumber, int pageSize)
+        {
+            List<Item>? products = await GetAll();
+            List<Item>? matchItems = products.FindAll(item => item.Name.Contains(name));
+            List<Item>? items = matchItems.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            int count = matchItems.Count;
+
+            return new PagedList<Item>(items, count, pageNumber, pageSize);
+        }
     }
 }

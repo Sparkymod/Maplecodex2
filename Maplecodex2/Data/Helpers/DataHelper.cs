@@ -1,4 +1,5 @@
 ﻿using Maplecodex2.Data.Models;
+using Maplecodex2.Data.Services;
 using Maplecodex2.Database.Core;
 using Serilog;
 using System.Diagnostics;
@@ -60,26 +61,50 @@ namespace Maplecodex2.Data.Helpers
 
             for (int pageNumber = 1; pageNumber <= pagedItemList.TotalPages; pageNumber++)
             {
-                if (pageNumber >= pagedItemList.CurrentPage && pageNumber <= pagedItemList.CurrentPage + paginationSize)
-                {
-                    // Add new page
-                    newPage = new(pageNumber, true, pageNumber.ToString()) { Active = pagedItemList.CurrentPage == pageNumber };
-                    links.Add(newPage);
-                }
+                newPage = new(pageNumber, true, pageNumber.ToString());
 
-                if (pageNumber == pagedItemList.CurrentPage + paginationSize)
+                if (pageNumber == pagedItemList.CurrentPage)
                 {
-                    newPage = new(pageNumber, false, "...");
-                    links.Add(newPage);
-                    // Show the last page available
-                    newPage = new(pagedItemList.TotalPages, true, "Last") { Active = pagedItemList.CurrentPage == pagedItemList.TotalPages };
+                    newPage.Active = pagedItemList.CurrentPage == pageNumber;
+                }
+                if ( pageNumber >= pagedItemList.CurrentPage && pageNumber <= pagedItemList.CurrentPage + paginationSize)
+                {
                     links.Add(newPage);
                 }
             }
 
+            // Show the last page available
+            newPage = new(pagedItemList.TotalPages, pagedItemList.HasNext, "Last");
+            links.Add(newPage);
+
             newPage = new(pagedItemList.CurrentPage + 1, pagedItemList.HasNext, "Next");
             links.Add(newPage);
             return links;
+        }
+
+        public static async Task<PagedList<Item>> GeneratePagedList(string? searchValue, PagingLink link, int pageSize, ItemService service)
+        {
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                // Search by ID
+                if (char.IsDigit(searchValue, 0) && int.Parse(searchValue) > 0)
+                {
+                    return await service.GetItemPerPageById(int.Parse(searchValue), link.Page, pageSize);
+                }
+                // Search by Name
+                else if (char.IsLetter(searchValue, 0))
+                {
+                    return await service.GetItemPerPageByName(searchValue, link.Page, pageSize);
+                }
+                else
+                {
+                    return await service.GetItemsPerPage(link.Page, pageSize);
+                }
+            }
+            else
+            {
+                return await service.GetItemsPerPage(link.Page, pageSize);
+            }
         }
     }
 
@@ -96,7 +121,7 @@ namespace Maplecodex2.Data.Helpers
         public static void Stop()
         {
             Watch.Stop();
-            Log.Logger.Information($"\nTimer finished in: {Watch.Elapsed.Minutes} minutes {Watch.Elapsed.Seconds} seconds.");
+            Log.Logger.Information(Watch.Elapsed.ToString());
         }
     }
 }

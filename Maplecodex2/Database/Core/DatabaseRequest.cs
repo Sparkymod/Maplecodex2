@@ -3,7 +3,7 @@ using Serilog;
 
 namespace Maplecodex2.Database.Core
 {
-    public abstract class DatabaseRequest<TEntity> : IDisposable, IModel<TEntity> where TEntity : class, IEntity
+    public class DatabaseRequest<TEntity> : IDisposable, IModel<TEntity> where TEntity : class, IEntity
     {
         public static DbContext? Context { get; set; }
 
@@ -41,10 +41,7 @@ namespace Maplecodex2.Database.Core
             return entity;
         }
 
-        public async Task<bool> Exist(TEntity entity)
-        {
-            return await Context.Set<TEntity>().ContainsAsync(entity);
-        }
+        public async Task<bool> Exist(TEntity entity) => await Context.Set<TEntity>().ContainsAsync(entity);
 
         public static async Task<bool> Commit()
         {

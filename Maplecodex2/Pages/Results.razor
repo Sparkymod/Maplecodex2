@@ -12,8 +12,9 @@
     <div class="form-inline">
         <!-- Search -->
         <form>
-            <span class=""> Search ID: </span>
-            <input class="form-control mr-sm-2" @bind-value="@Id" @bind-value:event="oninput" type="search" placeholder="type id, e.g 10200001" aria-label="Search">
+            <span class="">Search: </span>
+
+            <input id="searchInput" class="form-control mr-sm-2" @bind-value="@SearchValue" @bind-value:event="oninput" type="search" placeholder="Type id or name" aria-label="Search">
 
             <label style="padding-left: 1vh;">
                 Show
@@ -66,7 +67,7 @@
                 @foreach (PagingLink link in Links)
                 {
                     <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Hidden ? "hidden" : null) @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
-                        <span class="btn-toolbar" href="#">@link.Text</span>
+                        <span style="@(char.IsDigit(link.Text, 0) ? "width: 4.5rem; text-align: center;" : null)" class="btn-toolbar" href="#">@link.Text</span>
                     </li>
                 }
             </ul>
@@ -77,7 +78,7 @@
 @code {
     [BindProperty]
     public int PageSize { get; set; }
-    public int Id { get; set; }
+    public string? SearchValue { get; set; }
 
     public List<Item>? ItemList;
     public PagedList<Item>? PagedList;
@@ -87,7 +88,7 @@
     // Initializer
     protected override async Task OnInitializedAsync()
     {
-        Id = 0;
+        SearchValue = "";
         PageSize = 10;
         PagedList = await ItemService.GetItemsPerPage(1, PageSize);
         ItemList = PagedList.Items;
@@ -102,8 +103,8 @@
 
         CurrentLink = link;
         PagedList.CurrentPage = link.Page;
+        PagedList = await DataHelper.GeneratePagedList(SearchValue, link, PageSize, ItemService);
 
-        PagedList = Id > 0 ? await ItemService.GetItemPerPageById(Id, link.Page, PageSize) : await ItemService.GetItemsPerPage(link.Page, PageSize);
         ItemList = PagedList.Items;
         Links.Clear();
         Links = DataHelper.CreatePaginationLinks(PagedList, 5);
@@ -111,7 +112,7 @@
 
     public async Task OnClick()
     {
-        PagedList = Id > 0 ? await ItemService.GetItemPerPageById(Id, CurrentLink.Page, PageSize) : await ItemService.GetItemsPerPage(CurrentLink.Page, PageSize);
+        PagedList = await DataHelper.GeneratePagedList(SearchValue, CurrentLink, PageSize, ItemService);
         ItemList = PagedList.Items;
         Links.Clear();
         Links = DataHelper.CreatePaginationLinks(PagedList, 5);
