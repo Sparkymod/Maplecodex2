@@ -32,6 +32,11 @@ namespace Maplecodex2.DBSync
                 IEnumerable<Item> items = ItemStorage.GetAll().OrderBy(i => i.Id);
                 foreach (Item item in items)
                 {
+                    if (await service.Exist(item))
+                    {
+                        ConsoleUtility.WriteProgressBar(count++, items.Count());
+                        continue;
+                    }
                     await service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar(count++, items.Count()));
                 }
 

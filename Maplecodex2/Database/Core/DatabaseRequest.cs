@@ -41,6 +41,11 @@ namespace Maplecodex2.Database.Core
             return entity;
         }
 
+        public async Task<bool> Exist(TEntity entity)
+        {
+            return await Context.Set<TEntity>().ContainsAsync(entity);
+        }
+
         public static async Task<bool> Commit()
         {
             try
