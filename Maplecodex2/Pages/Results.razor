@@ -6,13 +6,14 @@
 @using Microsoft.AspNetCore.Mvc
 
 @inject ItemService ItemService
+@inject IJSRuntime JSRuntime
 
 <!-- Container results. -->
 <div class="container">
     <div class="form-inline">
         <!-- Search -->
-        <form>
-            <span class="">Search: </span>
+        <form class="unselectable">
+            <span>Search: </span>
 
             <input id="searchInput" class="form-control mr-sm-2" @bind-value="@SearchValue" @bind-value:event="oninput" type="search" placeholder="Type id or name" aria-label="Search">
 
@@ -31,7 +32,7 @@
     <div class="" style="width: auto;" id="ItemTable_Wrapper">
         <table class="table table-responsive table-striped table-bordered dataTable dtr-inline justify-content-center" id="ItemTable">
             <thead>
-                <tr role="row">
+                <tr role="row" class="unselectable">
                     <th class="" rowspan="1" colspan="1">Icon</th>
                     <th class="sorting" rowspan="1" colspan="1">ID</th>
                     <th class="sorting" rowspan="1" colspan="1">Slot</th>
@@ -52,7 +53,7 @@
                         {
                             <td class="col-xs-1"> <img src="@newItem?.Icon" width="30vh" height="30vh" /></td>
                         }
-                        <td class="col-xs-1">@newItem?.Id</td>
+                        <td class="col-xs-1" id="itemId" @onmousedown="() => InvokeHelperScript()">@newItem?.Id</td>
                         <td class="col-xs-1">@newItem?.Slot</td>
                         <td class="col-xs-5">@newItem?.Name</td>
                         <td class="col-xs-1">@newItem?.Feature</td>
@@ -67,7 +68,7 @@
                 @foreach (PagingLink link in Links)
                 {
                     <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Hidden ? "hidden" : null) @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
-                        <span style="@(char.IsDigit(link.Text, 0) ? "width: 4.5rem; text-align: center;" : null)" class="btn-toolbar" href="#">@link.Text</span>
+                        <span style="@(char.IsDigit(link.Text, 0) ? "width: 4.5rem; text-align: center;" : null)" class="unselectable btn-toolbar" href="#">@link.Text</span>
                     </li>
                 }
             </ul>
@@ -91,6 +92,10 @@
         SearchValue = "";
         PageSize = 10;
         PagedList = await ItemService.GetItemsPerPage(1, PageSize);
+        if (PagedList == null)
+        {
+            return;
+        }
         ItemList = PagedList.Items;
         Links = DataHelper.CreatePaginationLinks(PagedList, 5);
         CurrentLink = Links.First(t => t.Enabled);
@@ -99,7 +104,7 @@
     // This is called by the pagination nav
     public async Task OnSelectedPage(PagingLink link)
     {
-        if (link.Page == PagedList.CurrentPage || !link.Enabled) { return; }
+        if (link.Page == PagedList.CurrentPage || !link.Enabled || PagedList == null) { return; }
 
         CurrentLink = link;
         PagedList.CurrentPage = link.Page;
@@ -113,8 +118,18 @@
     public async Task OnClick()
     {
         PagedList = await DataHelper.GeneratePagedList(SearchValue, CurrentLink, PageSize, ItemService);
+        if (PagedList == null)
+        {
+            return;
+        }
         ItemList = PagedList.Items;
         Links.Clear();
         Links = DataHelper.CreatePaginationLinks(PagedList, 5);
+    }
+
+    public async Task InvokeHelperScript()
+    {
+        // TODO:
+        await JSRuntime.InvokeVoidAsync("CopyToClipboard");
     }
 }

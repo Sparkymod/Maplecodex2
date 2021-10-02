@@ -5,11 +5,14 @@ namespace Maplecodex2.Data.Services
 {
     public class ItemService : DatabaseRequest<Item>
     {
+        private static Task<List<Item>>? Items;
+
         public async Task<Item> GetItemAsync(int id) => await Get(id);
 
         public async Task<PagedList<Item>> GetItemsPerPage(int pageNumber, int pageSize)
         {
-            List<Item>? products = await GetAll();
+            Items = GetAll();
+            List<Item>? products = await Items;
             int count = products.Count;
             List<Item>? items = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
@@ -18,7 +21,7 @@ namespace Maplecodex2.Data.Services
 
         public async Task<PagedList<Item>> GetItemPerPageById(int id, int pageNumber, int pageSize)
         {
-            List<Item>? products = await GetAll();
+            List<Item>? products = await Items;
             List<Item>? matchItems = products.FindAll(item => item.Id.ToString().Contains(id.ToString()));
             List<Item>? items = matchItems.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             int count = matchItems.Count;
@@ -28,8 +31,8 @@ namespace Maplecodex2.Data.Services
 
         public async Task<PagedList<Item>> GetItemPerPageByName(string name, int pageNumber, int pageSize)
         {
-            List<Item>? products = await GetAll();
-            List<Item>? matchItems = products.FindAll(item => item.Name.Contains(name));
+            List<Item>? products = await Items;
+            List<Item>? matchItems = products.FindAll(item => item.Name.ToLower().Contains(name.ToLower()));
             List<Item>? items = matchItems.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             int count = matchItems.Count;
 

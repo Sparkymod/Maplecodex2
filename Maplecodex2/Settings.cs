@@ -62,7 +62,8 @@ namespace Maplecodex2
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
-                .WriteTo.Console(theme: Theme.RDKSerilogTheme, outputTemplate: Template);
+                .WriteTo.Console(theme: Theme.RDKSerilogTheme, outputTemplate: Template)
+                .WriteTo.File(Path.Combine(Paths.SOLUTION_DIR, "maplecodex2.log"), LogEventLevel.Error);
         }
     }
 

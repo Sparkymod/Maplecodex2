@@ -13,6 +13,14 @@
     --timber-green: #1e3530;
 }
 
+.unselectable {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
 .navbar {
     background-color: var(--sushi);
     box-shadow: -1px 4px 9px -6px rgba(0,0,0,0.78);
