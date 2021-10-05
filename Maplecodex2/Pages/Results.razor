@@ -33,27 +33,27 @@
         <table class="table table-responsive table-striped table-bordered dataTable dtr-inline justify-content-center" id="ItemTable">
             <thead>
                 <tr role="row" class="unselectable">
-                    <th class="" rowspan="1" colspan="1">Icon</th>
-                    <th class="sorting" rowspan="1" colspan="1">ID</th>
-                    <th class="sorting" rowspan="1" colspan="1">Slot</th>
-                    <th class="sorting" rowspan="1" colspan="1">Name</th>
-                    <th class="sorting" rowspan="1" colspan="1">Feature</th>
-                    <th class="sorting" rowspan="1" colspan="1">Type</th>
+                    <th class="bg-success" rowspan="1" colspan="1">Icon</th>
+                    <th class="bg-success" rowspan="1" colspan="1">ID</th>
+                    <th class="bg-success" rowspan="1" colspan="1">Slot</th>
+                    <th class="bg-success" rowspan="1" colspan="1">Name</th>
+                    <th class="bg-success" rowspan="1" colspan="1">Feature</th>
+                    <th class="bg-success" rowspan="1" colspan="1">Type</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="itemTable">
                 @foreach (Item newItem in ItemList)
                 {
                     <tr role="row">
                         @if (string.IsNullOrEmpty(@newItem?.Icon))
                         {
-                            <td class="col-xs-1"><img src="icon0.png" width="30vh" height="30vh" /></td>
+                            <td class="col-xs-1 unselectable"><img src="icon0.png" width="30vh" height="30vh" /></td>
                         }
                         else
                         {
-                            <td class="col-xs-1"> <img src="@newItem?.Icon" width="30vh" height="30vh" /></td>
+                            <td class="col-xs-1 unselectable"> <img src="@newItem?.Icon" width="30vh" height="30vh" /></td>
                         }
-                        <td class="col-xs-1" id="itemId" @onmousedown="() => InvokeHelperScript()">@newItem?.Id</td>
+                        <td class="col-xs-1 unselectable uncopied" id="itemTableId">@newItem?.Id</td>
                         <td class="col-xs-1">@newItem?.Slot</td>
                         <td class="col-xs-5">@newItem?.Name</td>
                         <td class="col-xs-1">@newItem?.Feature</td>
@@ -104,12 +104,14 @@
     // This is called by the pagination nav
     public async Task OnSelectedPage(PagingLink link)
     {
-        if (link.Page == PagedList.CurrentPage || !link.Enabled || PagedList == null) { return; }
+        if (link.Page == PagedList.CurrentPage || !link.Enabled || PagedList == null)
+        {
+            return;
+        }
 
         CurrentLink = link;
         PagedList.CurrentPage = link.Page;
         PagedList = await DataHelper.GeneratePagedList(SearchValue, link, PageSize, ItemService);
-
         ItemList = PagedList.Items;
         Links.Clear();
         Links = DataHelper.CreatePaginationLinks(PagedList, 5);
@@ -118,6 +120,10 @@
     public async Task OnClick()
     {
         PagedList = await DataHelper.GeneratePagedList(SearchValue, CurrentLink, PageSize, ItemService);
+        if (CurrentLink.Page > 1)
+        {
+            CurrentLink.Page = 1;
+        }
         if (PagedList == null)
         {
             return;
@@ -125,11 +131,5 @@
         ItemList = PagedList.Items;
         Links.Clear();
         Links = DataHelper.CreatePaginationLinks(PagedList, 5);
-    }
-
-    public async Task InvokeHelperScript()
-    {
-        // TODO:
-        await JSRuntime.InvokeVoidAsync("CopyToClipboard");
     }
 }
