@@ -1,5 +1,5 @@
 ﻿// Initializer
-$(document).ready(CopyToClipboard());
+document.addEventListener("DOMContentLoaded", CopyToClipboard(), false);
 
 function CopyToClipboard() {
     document.addEventListener('click', (e) => {
