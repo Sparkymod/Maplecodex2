@@ -23,6 +23,27 @@
     cursor: pointer;
 }
 
+.iconset_wrapper_big {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto
+}
+
+.icon_wrapper {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    margin: -5px;
+}
+
+.dt-icon {
+    width: 40px;
+    text-align: center
+}
+
 .unselectable {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */

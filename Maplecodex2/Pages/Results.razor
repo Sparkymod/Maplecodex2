@@ -45,14 +45,7 @@
                 @foreach (Item newItem in ItemList)
                 {
                     <tr role="row">
-                        @if (string.IsNullOrEmpty(@newItem?.Icon))
-                        {
-                            <td class="col-xs-1 unselectable"><img src="icon0.png" width="30vh" height="30vh" /></td>
-                        }
-                        else
-                        {
-                            <td class="col-xs-1 unselectable"> <img src="@newItem?.Icon" width="30vh" height="30vh" /></td>
-                        }
+                        <DisplayIcon itemIcon="@newItem?.Icon" />
                         <td class="col-xs-1 unselectable uncopied" id="itemTableId">@newItem?.Id</td>
                         <td class="col-xs-1">@newItem?.Slot</td>
                         <td class="col-xs-5">@newItem?.Name</td>
