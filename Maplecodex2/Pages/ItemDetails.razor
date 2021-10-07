@@ -1,0 +1,36 @@
+﻿@page "/item/{Id:int}"
+
+<div class="container">
+    <div class="outer">
+        <table class="itemwhite_table">
+            <tbody>
+                <tr>
+                    <td colspan="2">@Id</td>
+                </tr>
+                <tr>
+                    <td>☆☆☆☆☆</td>
+                </tr>
+                <tr>
+                    <td class="item-icon">
+                        <div style="margin-top: 10px;">
+                            <DisplayIcon itemIcon="icon0.png" />
+                        </div>
+                    </td>
+                    <td>
+                        ITEM_NAME
+                        <br />
+                        <span>
+                            WEAPON_ATTACK
+                        </span>
+                    </td>
+                </tr>
+                <tr><td colspan="2"><hr class="hr_long"></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}

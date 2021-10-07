@@ -23,6 +23,7 @@
     cursor: pointer;
 }
 
+/* Icon set style */
 .iconset_wrapper_big {
     position: relative;
     width: 30px;
@@ -42,6 +43,42 @@
 .dt-icon {
     width: 40px;
     text-align: center
+}
+
+.item-icon {
+    vertical-align: top;
+    width: 45px;
+}
+
+/* Item Info template style */
+.hr_long {
+    width: 100%;
+    border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left,white,white 9%,white 91%,white);
+    background-image: -moz-linear-gradient(left,white,white 9%,white 91%,white);
+    background-image: -ms-linear-gradient(left,white,white 9%,white 91%,white);
+    background-image: -o-linear-gradient(left,white,white 9%,white 91%,white);
+    margin-bottom: 10px;
+    margin-top: 10px
+}
+
+.itemwhite_table {
+    border: 0;
+    width: 100%;
+    padding-left: 25px;
+    border-collapse: collapse;
+    text-align: left;
+    vertical-align: top;
+    color: white;
+    text-shadow: 1.2px 1.2px rgb(52 60 16 / 0.62);
+}
+
+.outer {
+    box-shadow: 0 0 1px 1px var(--woodland),inset 0 0 0 1px var(--sushi);
+    background: #6c9851;
+    border: 1px solid var(--yukon-gold);
+    padding: 5px
 }
 
 .unselectable {
