@@ -44,6 +44,12 @@ namespace Maplecodex2
             Log.Logger = Serilog.Config().CreateLogger();
             return Serilog.Config().CreateLogger();
         }
+
+        public static string GetURL()
+        {
+            DotEnv.Load();
+            return Environment.GetEnvironmentVariable("USE_URL");
+        }
     }
 
     // Serilog Settings.
