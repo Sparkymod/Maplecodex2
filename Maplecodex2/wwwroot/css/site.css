@@ -3,13 +3,13 @@
 
 /* CSS HEX */
 * {
-    --sushi: #7ead38;
+    --sushi: #abd200;
     --cod-green: #08110a;
     --woodland: #3a5523;
     --yukon-gold: #5c6c04;
     --stromboli: #376450;
     --black-olive: #232f16;
-    --lochinvar: #248373;
+    --lochinvar: #68b587;
     --camouflage: #343c10;
     --timber-green: #1e3530;
 }
@@ -19,7 +19,7 @@
     text-shadow: 1px 1px 1px rgba(156,133,23,0.53);
 }
 
-.uncopied{
+.uncopied {
     cursor: pointer;
 }
 
@@ -63,6 +63,21 @@
     margin-top: 10px
 }
 
+.item_info {
+    display: inline-block;
+    max-width: 700px;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.center_item {
+    box-shadow: -1px 4px 9px rgba(0,0,0,0.78);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .itemwhite_table {
     border: 0;
     width: 100%;
@@ -70,15 +85,16 @@
     border-collapse: collapse;
     text-align: left;
     vertical-align: top;
-    color: white;
+    color: var(--sushi);
     text-shadow: 1.2px 1.2px rgb(52 60 16 / 0.62);
 }
 
 .outer {
     box-shadow: 0 0 1px 1px var(--woodland),inset 0 0 0 1px var(--sushi);
-    background: #6c9851;
+    background: rgba(8, 17, 10, 0.7);
     border: 1px solid var(--yukon-gold);
-    padding: 5px
+    padding: 5px;
+    width: 100%;
 }
 
 .unselectable {
