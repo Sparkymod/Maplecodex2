@@ -1,5 +1,4 @@
-﻿using Maplecodex2.Database.Core;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Maplecodex2.Data.Models
 {

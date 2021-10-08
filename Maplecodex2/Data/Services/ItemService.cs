@@ -1,7 +1,6 @@
-﻿using Maplecodex2.Data.Models;
+﻿using Maplecodex2.Data.Extensions;
+using Maplecodex2.Data.Models;
 using Maplecodex2.Database.Core;
-using Maplecodex2.Data.Extensions;
-using Maplecodex2.Database;
 
 namespace Maplecodex2.Data.Services
 {
@@ -11,7 +10,7 @@ namespace Maplecodex2.Data.Services
 
         public ItemService()
         {
-            using DatabaseContext<Item> Context = new(Settings.GetDbContextOptions().Options);
+            using DatabaseRequest<Item> Context = new();
             Items = Context.GetAll();
         }
 

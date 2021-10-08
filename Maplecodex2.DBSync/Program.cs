@@ -1,6 +1,6 @@
 ﻿using Maplecodex2.Data.Helpers;
 using Maplecodex2.Data.Models;
-using Maplecodex2.Data.Services;
+using Maplecodex2.Database.Core;
 using Maplecodex2.DBSync.Data.Storage;
 using Serilog;
 
@@ -27,17 +27,17 @@ namespace Maplecodex2.DBSync
                 Log.Logger.Information($"Starting Database Sync... Please Wait!\n");
 
                 int count = 1;
-                ItemService service = new();
+                DatabaseRequest<Item> itemContext = new();
 
                 IEnumerable<Item> items = ItemStorage.GetAll().OrderBy(i => i.Id);
                 foreach (Item item in items)
                 {
-                    if (await service.Exist(item))
+                    if (await itemContext.Exist(item))
                     {
                         ConsoleUtility.WriteProgressBar(count++, items.Count());
                         continue;
                     }
-                    await service.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar(count++, items.Count()));
+                    await itemContext.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar(count++, items.Count()));
                 }
 
                 Timerwatch.Stop();
