@@ -1,6 +1,5 @@
 ﻿using Maplecodex2.Data.Helpers;
 using Maplecodex2.Database;
-using Maplecodex2.Database.Managers;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Core;
@@ -14,14 +13,15 @@ namespace Maplecodex2
         public static void InitDatabase()
         {
             DotEnv.Load();
-            new DatabaseManager().InitDatabase();
+            using DatabaseContext Context = new (GetDbContextOptions().Options);
+            Context.InitDatabase();
         }
 
-        public static DatabaseContext GetDbContext()
+        public static DbContextOptionsBuilder GetDbContextOptions()
         {
             DbContextOptionsBuilder optionsBuilder = new();
             optionsBuilder.UseMySQL(GetConnectionString());
-            return new(optionsBuilder.Options);
+            return optionsBuilder;
         }
 
         /// <summary>

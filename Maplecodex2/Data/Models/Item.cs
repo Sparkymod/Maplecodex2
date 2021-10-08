@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Maplecodex2.Data.Models
 {
-    public class Item : IEntity
+    public class Item
     {
         public int Id { get; set; }
         public string? Name { get; set; }

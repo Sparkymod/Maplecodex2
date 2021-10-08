@@ -1,7 +1,7 @@
 ﻿
 namespace Maplecodex2.Database.Core
 {
-    public interface IModel<T> where T : class, IEntity
+    public interface IModel<T> where T : class
     {
         Task<List<T>> GetAll();
         Task<T> Get(int id);

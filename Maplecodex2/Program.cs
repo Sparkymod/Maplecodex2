@@ -1,6 +1,7 @@
 using Maplecodex2;
 using Maplecodex2.Data.Extensions;
 using Maplecodex2.Data.Services;
+using Maplecodex2.Database;
 using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<ItemService>();
-builder.WebHost.UseUrls(Settings.GetURL());
+//builder.WebHost.UseUrls(Settings.GetURL());
 builder.Services.AddSignalR();
 
 // Set serilog configuration.
