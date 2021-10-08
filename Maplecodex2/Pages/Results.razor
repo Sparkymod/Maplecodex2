@@ -112,8 +112,9 @@
 
     public async Task OnClick()
     {
-        PagedList = await DataHelper.GeneratePagedList(SearchValue, CurrentLink, PageSize, ItemService);
-        if (CurrentLink.Page > 1 && !string.IsNullOrEmpty(SearchValue))
+        Task<PagedList<Item>> result = DataHelper.GeneratePagedList(SearchValue, CurrentLink, PageSize, ItemService);
+        PagedList = await result;
+        if (result.IsCompleted && CurrentLink.Page > 1 && !string.IsNullOrEmpty(SearchValue))
         {
             CurrentLink.Page = 1;
         }
