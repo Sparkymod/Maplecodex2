@@ -17,12 +17,15 @@ namespace Maplecodex2.Data.Parser
             Dictionary<int, Item> itemList = new();
             XmlDocument itemname = DataHelper.ReadDataFromXml(Paths.XML_ITEM);
             XmlNodeList? itemNodes = itemname.SelectNodes("ms2/key");
+            
+            ConsoleUtility.TotalProgressCount = itemNodes.Count;
+            ConsoleUtility.ProgressCount = 1;
 
-            int count = 1;
-            int itemNodesCount = itemNodes.Count;
             foreach (XmlNode? node in itemNodes)
             {
-                ConsoleUtility.WriteProgressBar(count++, itemNodesCount);
+                ConsoleUtility.ClassName = $"Itemname.xml";
+                ConsoleUtility.ProgressCount++;
+                ConsoleUtility.WriteProgressBar();
 
                 // Set Item values
                 Item item = new();
@@ -37,15 +40,20 @@ namespace Maplecodex2.Data.Parser
                 itemList[item.Id] = item;
             }
 
-            count = 1;
             Log.Logger.Information($"{itemNodes.Count} Items successfully loaded!".Green());
             Log.Logger.Information($"Adding extra data to items...\n".Yellow());
-            List<string> itemPreset = new();
 
+            List<string> itemPreset = new();
             List<string> files = DataHelper.GetAllFilesFrom(Paths.XML_ROOT, "item");
+
+            ConsoleUtility.TotalProgressCount = files.Count;
+            ConsoleUtility.ProgressCount = 1;
+
             foreach (string file in files)
             {
-                ConsoleUtility.WriteProgressBar(count++, files.Count);
+                ConsoleUtility.ClassName = $"Items";
+                ConsoleUtility.ProgressCount++;
+                ConsoleUtility.WriteProgressBar();
 
                 int id = int.Parse(Path.GetFileNameWithoutExtension(file));
                 // Read and save the XML in document.

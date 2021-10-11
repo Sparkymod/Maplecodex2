@@ -5,7 +5,7 @@ namespace Maplecodex2.DBSync.Data.Storage
 {
     public static class ItemStorage
     {
-        private static Dictionary<int, Item> Items = new();
+        private static Dictionary<int, Item> Items { get; set; }
 
         public static void Init() => Items = ItemParser.Parse();
 

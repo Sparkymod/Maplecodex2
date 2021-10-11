@@ -2,7 +2,9 @@
 using Maplecodex2.Data.Models;
 using Maplecodex2.Database.Core;
 using Maplecodex2.DBSync.Data.Storage;
+using Maplecodex2.DBSync.Data.Types;
 using Serilog;
+using System.Reflection;
 
 namespace Maplecodex2.DBSync
 {
@@ -18,33 +20,58 @@ namespace Maplecodex2.DBSync
             {
                 Settings.InitDatabase();
                 Timerwatch.Start();
+
                 // Initialize Metadata
                 Log.Logger.Information($"Initialize Metadata...\n".Yellow());
                 InitializeMetadata();
 
-                Log.Logger.Information($"Metadata loaded!".Green());
                 // Foreach class Type Storage, GetAll items and parse them using the same Type Services.
                 Log.Logger.Information($"Starting Database Sync... Please Wait!\n");
+                await DatabaseSync();
 
-                int count = 1;
-                DatabaseRequest<Item> itemContext = new();
-
-                IEnumerable<Item> items = ItemStorage.GetAll().OrderBy(i => i.Id);
-                foreach (Item item in items)
-                {
-                    if (await itemContext.Exist(item))
-                    {
-                        ConsoleUtility.WriteProgressBar(count++, items.Count());
-                        continue;
-                    }
-                    await itemContext.Add(item).ContinueWith(t => ConsoleUtility.WriteProgressBar(count++, items.Count()));
-                }
-
+                Log.Logger.Information($"Metadata loaded!".Green());
                 Timerwatch.Stop();
             }
         }
 
         // TODO foreach class type [Storage], get the Method {Init} to initialize them all by Reflection.
-        public static void InitializeMetadata() => ItemStorage.Init();
+        public static void InitializeMetadata()
+        {
+            List<Type> listStaticClass = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsAbstract && t.IsClass && t.Namespace == "Maplecodex2.DBSync.Data.Storage").ToList();
+
+            foreach (Type staticClass in listStaticClass)
+            {
+                staticClass.GetMethod("Init")?.Invoke(null, null);
+            }
+        }
+
+        public static async Task DatabaseSync()
+        {
+            DatabaseRequest<Item> itemContext = new();
+            IEnumerable<Item> items = ItemStorage.GetAll().OrderBy(i => i.Id);
+
+            ConsoleUtility.TotalProgressCount = items.Count();
+            ConsoleUtility.ProgressCount = 1;
+
+            foreach (Item item in items)
+            {
+                ConsoleUtility.ClassName = $"{item.Id}";
+                if (await itemContext.Exist(item))
+                {
+                    continue;
+                }
+                await itemContext.Add(item).ContinueWith(t => ConsoleUtility.ProgressCount++).ContinueWith(t => ConsoleUtility.WriteProgressBar());
+            }
+
+            DatabaseRequest<Node> itemXml = new();
+
+            foreach(int id in ItemTemplateStorage.ItemXml.Keys)
+            {
+                foreach(Node node in ItemTemplateStorage.ItemXml[id])
+                {
+
+                }
+            }
+        }
     }
 }
