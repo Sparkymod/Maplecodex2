@@ -25,4 +25,4 @@ app.MapFallbackToPage("/_Host");
 // Initialization
 Settings.InitDatabase();
 
-app.Run();
+app.Run(); 
