@@ -8,7 +8,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<ItemService>();
-//builder.WebHost.UseUrls(Settings.GetURL());
+builder.WebHost.UseUrls(Settings.GetURL());
 builder.Services.AddSignalR();
 
 // Set serilog configuration.

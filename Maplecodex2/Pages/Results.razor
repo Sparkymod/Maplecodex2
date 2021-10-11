@@ -29,8 +29,8 @@
         </form>
     </div>
     <!-- Item Datatable -->
-    <div class="" style="width: auto;" id="ItemTable_Wrapper">
-        <table class="table table-responsive table-striped table-bordered dataTable dtr-inline justify-content-center" id="ItemTable">
+    <div style="width: auto;" id="ItemTable_Wrapper">
+        <table class="table-shadow table table-responsive table-bordered dataTable dtr-inline justify-content-center" id="ItemTable">
             <thead>
                 <tr role="row" class="unselectable">
                     <th class="bg-success" rowspan="1" colspan="1">Icon</th>
@@ -114,13 +114,13 @@
     {
         Task<PagedList<Item>> result = DataHelper.GeneratePagedList(SearchValue, CurrentLink, PageSize, ItemService);
         PagedList = await result;
-        if (result.IsCompleted && CurrentLink.Page > 1 && !string.IsNullOrEmpty(SearchValue))
-        {
-            CurrentLink.Page = 1;
-        }
         if (PagedList == null)
         {
             return;
+        }
+        if (CurrentLink.Page > 1)
+        {
+            CurrentLink.Page = 1;
         }
         ItemList = PagedList.Items;
         Links.Clear();

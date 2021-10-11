@@ -31,11 +31,13 @@ namespace Maplecodex2.Data.Parser
                 Item item = new();
 
                 // From itemname
-                item.Id = int.Parse(node.Attributes?["id"]?.Value ?? "0");
-                item.Type = node.Attributes["class"]?.Value ?? "";
-                item.Name = node.Attributes["name"]?.Value ?? "";
-                item.Feature = node.Attributes["feature"]?.Value ?? "";
-                item.Locale = node.Attributes["locale"]?.Value ?? "";
+                item.Id = int.Parse(node.Attributes["id"] != null ? node.Attributes["id"].Value : "0");
+                item.Type = node.Attributes["class"] != null ? node.Attributes["class"].Value : "";
+                item.Name = node.Attributes["name"] != null ? node.Attributes["name"].Value : "";
+                item.Feature = node.Attributes["feature"] != null ? node.Attributes["feature"].Value : "";
+                item.Locale = node.Attributes["locale"] != null ? node.Attributes["locale"].Value : "";
+                item.Icon = "icon0.png";
+                item.Slot = "";
 
                 itemList[item.Id] = item;
             }

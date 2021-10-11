@@ -1,7 +1,10 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,500;0,700;1,300&display=swap');
 
-/* CSS HEX */
+/* ============================
+           COLOR HEX
+   ============================
+*/
 * {
     --sushi: #abd200;
     --cod-green: #08110a;
@@ -23,7 +26,10 @@
     cursor: pointer;
 }
 
-/* Icon set style */
+/* ============================
+         ICON SET STYLE
+   ============================
+*/
 .iconset_wrapper_big {
     position: relative;
     width: 30px;
@@ -50,7 +56,12 @@
     width: 45px;
 }
 
-/* Item Info template style */
+/* ============================
+        ITEM INFO STYLE
+   ============================
+*/
+
+/* LINE */
 .hr_long {
     width: 100%;
     border: 0;
@@ -97,6 +108,12 @@
     width: 100%;
 }
 
+
+/* ============================
+        FIXES / CUSTOMS
+   ============================
+*/
+
 .unselectable {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -122,6 +139,35 @@ html, body {
     font-family: 'Roboto', sans-serif;
 }
 
+.body_fix {
+    background-color: white;
+}
+
+.table-shadow {
+    box-shadow: -1px 2px 5px -4px rgba(0,0,0,0.48);
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* ============================
+            DARK MODE 
+   ============================
+*/
+.table-shadow_dark-theme {
+    box-shadow: -1px 2px 5px -4px rgba(255,255,255,0.5);
+    -webkit-box-shadow: -1px 2px 5px -4px rgba(255,255,255,0.5);
+    -moz-box-shadow: -1px 2px 5px -4px rgba(255,255,255,0.5);
+}
+
+/* ============================
+         Blazor Components 
+   ============================
+*/
 h1:focus {
     outline: none;
 }
@@ -134,13 +180,6 @@ a, .btn-link {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
-}
-
-.center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .valid.modified:not([type=checkbox]) {
