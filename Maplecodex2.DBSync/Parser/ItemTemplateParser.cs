@@ -1,13 +1,6 @@
 ﻿using Maplecodex2.Data.Helpers;
 using Maplecodex2.DBSync.Data.Types;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using Xml2CSharp;
 
 namespace Maplecodex2.DBSync.Parser
 {
@@ -28,16 +21,13 @@ namespace Maplecodex2.DBSync.Parser
                 ConsoleUtility.WriteProgressBar();
 
                 int id = int.Parse(Path.GetFileNameWithoutExtension(file));
-                var xml = File.ReadAllText(file);
-                var classInfo = new Xml2CSharpConverer().Convert(xml);
-                var classInfoWriter = new ClassInfoWriter(classInfo);
-                classInfoWriter.Write(Console.Out);
-                //XmlDocument? document = DataHelper.ReadDataFromXml(file);
-                //XmlNode ms2 = document.SelectSingleNode("ms2");
 
-                //if (ms2 == null) { continue; }
+                XmlDocument? document = DataHelper.ReadDataFromXml(file);
+                XmlNode ms2 = document.SelectSingleNode("ms2");
 
-                //itemXml.Add(id, XmlHelper.GetNodesFromChildNodes(ms2.ChildNodes));
+                if (ms2 == null) { continue; }
+
+                itemXml.Add(id, XmlHelper.GetNodesFromChildNodes(ms2.ChildNodes));
             }
 
             return itemXml;
