@@ -5,6 +5,7 @@ using Maplecodex2.DBSync.Data.Storage;
 using Maplecodex2.DBSync.Data.Types;
 using Serilog;
 using System.Reflection;
+using System.Dynamic;
 
 namespace Maplecodex2.DBSync
 {
@@ -64,14 +65,6 @@ namespace Maplecodex2.DBSync
             }
 
             DatabaseRequest<Node> itemXml = new();
-
-            foreach(int id in ItemTemplateStorage.ItemXml.Keys)
-            {
-                foreach(Node node in ItemTemplateStorage.ItemXml[id])
-                {
-
-                }
-            }
         }
     }
 }
