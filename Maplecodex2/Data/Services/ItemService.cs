@@ -26,7 +26,7 @@ namespace Maplecodex2.Data.Services
             }
             else if(!string.IsNullOrEmpty(searchValue) && char.IsLetter(searchValue, 0))
             {
-                return Task.FromResult(ResultsFromQuery.FindAll(item => item.Id.CompareWith(value)));
+                return Task.FromResult(ResultsFromQuery.FindAll(item => item.Name.CompareWith(searchValue)));
             }
             else
             {
