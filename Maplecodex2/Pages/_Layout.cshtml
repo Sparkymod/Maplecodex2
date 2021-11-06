@@ -9,15 +9,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
     <link href="css/site.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
-
-    <!-- Scripts loader. -->
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css" />
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
-<body class="body_fix">
+<body class="body-layout">
     @RenderBody()
 
     <div id="blazor-error-ui">
@@ -32,5 +30,10 @@
     </div>
     <script src="_framework/blazor.server.js"></script>
     <script src="js/helper.js"></script>
+        <footer class="footer mt-auto py-2 bg-light">
+        <div class="container">
+            <span style="" class="text-muted">Created by <a href="https://github.com/sparkymod">Sparkymod</a>.</span>
+        </div>
+    </footer>
 </body>
 </html>

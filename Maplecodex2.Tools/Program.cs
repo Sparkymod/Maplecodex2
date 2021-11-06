@@ -6,7 +6,7 @@ namespace Maplecodex2.Tools
     {
         public static void Main(string[] args)
         {
-            XmlToClass.Export(DataHelper.GetAllFilesFrom(Paths.XML_ROOT, "item").ToArray());
+            XmlToClass.Export(FileHelper.GetAllFilesFrom(Paths.XML_ROOT, "item").ToArray());
         }
     }
 }

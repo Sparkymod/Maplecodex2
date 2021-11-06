@@ -15,6 +15,12 @@
     --lochinvar: #68b587;
     --camouflage: #343c10;
     --timber-green: #1e3530;
+    /* ELEMENTS COLORS*/
+    --navbar-bg: var(--sushi);
+    --navbar-color: white;
+    --td-color: white;
+    --th-bg-color: var(--camouflage);
+    --th-color: #c9f5fc;
 }
 
 .copied {
@@ -54,6 +60,55 @@
 .item-icon {
     vertical-align: top;
     width: 45px;
+}
+
+/* ============================
+          FLEX CLASSES
+   ============================
+*/
+
+.item-align-flex {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    gap: 20px;
+    margin-top: 1vh;
+}
+
+.item-align-columns {
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.show-more {
+    margin-left: auto;
+}
+
+.footer {
+    text-shadow: 1px 1px rgba(0,0,0,0.3);
+    font-size: 12px;
+}
+
+.th-index-style {
+    background: var(--th-bg-color);
+    color: white;
+    text-shadow: 1px 1px 1.5px rgba(0,0,0,0.45);
+    font-size: 13px;
+}
+
+.tr-index-style {
+    background: var(--td-color);
+    font-size: 15px;
+}
+
+.body-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
 }
 
 /* ============================
@@ -123,16 +178,15 @@
 }
 
 .navbar {
-    background-color: var(--sushi);
+    background-color: var(--navbar-bg);
+    color: var(--navbar-color);
     box-shadow: -1px 4px 9px -6px rgba(0,0,0,0.78);
     -webkit-box-shadow: -1px 4px 9px -6px rgba(0,0,0,0.78);
     -moz-box-shadow: -1px 4px 9px -6px rgba(0,0,0,0.78);
-    margin: -1px;
+    text-shadow: 1px 1px 1.5px rgba(0,0,0,0.45);
 }
 
     .navbar > a > img {
-        margin-bottom: 1.5rem;
-        margin-top: 0.5rem;
     }
 
 html, body {
@@ -152,6 +206,10 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.option-fix {
+    margin-left: 8px;
 }
 
 /* ============================

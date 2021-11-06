@@ -7,12 +7,14 @@
         public bool Enabled { get; set; }
         public bool Active { get; set; }
         public bool Hidden { get; set; }
+        public string Info { get; set; }
 
-        public PagingLink(int page, bool enabled, string text)
+        public PagingLink(int page, bool enabled, string text, string info)
         {
             Page = page;
             Enabled = enabled;
             Text = text;
+            Info = info;
         }
     }
 }

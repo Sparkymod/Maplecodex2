@@ -6,41 +6,51 @@ namespace Maplecodex2.Data.Services
 {
     public class ItemService
     {
-        private static Task<List<Item>>? Items;
+        public ICollection<Item> Items { get; set; }
+        public List<Item> ResultsFromQuery { get; set; }
 
         public ItemService()
         {
             using DatabaseRequest<Item> Context = new();
-            Items = Context.GetAll();
+            Items = Context.GetAll().Result;
         }
 
-        public async Task<PagedList<Item>> GetItemsPerPage(int pageNumber, int pageSize)
+        private Task<List<Item>> GetDataItems(string searchValue)
         {
-            List<Item>? products = await Items;
-            int count = products.Count;
-            List<Item>? items = products.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            int value = !string.IsNullOrEmpty(searchValue) && char.IsDigit(searchValue, 0) ? int.Parse(searchValue) : 0;
+            ResultsFromQuery = Items.ToList();
 
-            return new PagedList<Item>(items, count, pageNumber, pageSize);
+            if (value > 0)
+            {
+                return Task.FromResult(ResultsFromQuery.FindAll(item => item.Id.CompareWith(value)));
+            }
+            else if(!string.IsNullOrEmpty(searchValue) && char.IsLetter(searchValue, 0))
+            {
+                return Task.FromResult(ResultsFromQuery.FindAll(item => item.Id.CompareWith(value)));
+            }
+            else
+            {
+                return Task.FromResult(ResultsFromQuery);
+            }
         }
 
-        public async Task<PagedList<Item>> GetItemPerPageById(int id, int pageNumber, int pageSize)
+        public async Task<PagedList<Item>> GetItemAsync(bool newSearch, string search, int pageNumber, int pageSize)
         {
-            List<Item>? products = await Items;
-            List<Item>? matchItems = products.FindAll(item => item.Id.CompareWith(id));
-            List<Item>? items = matchItems.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            int count = matchItems.Count;
+            if (ResultsFromQuery == null || newSearch)
+            {
+                ResultsFromQuery = await GetDataItems(search);
+            }
+            int count = ResultsFromQuery.Count;
+            IEnumerable<Item>? itemsForPage = ResultsFromQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            return new PagedList<Item>(items, count, pageNumber, pageSize);
+            return new PagedList<Item>(itemsForPage, count, pageNumber, pageSize);
         }
 
-        public async Task<PagedList<Item>> GetItemPerPageByName(string name, int pageNumber, int pageSize)
+        public Task<PagedList<Item>> GetItemsDefault(int pageNumber, int pageSize)
         {
-            List<Item>? products = await Items;
-            List<Item>? matchItems = products.FindAll(item => item.Name.CompareWith(name));
-            List<Item>? items = matchItems.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            int count = matchItems.Count;
-
-            return new PagedList<Item>(items, count, pageNumber, pageSize);
+            int count = Items.Count;
+            IEnumerable<Item>? itemsForPage = Items.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            return Task.FromResult(new PagedList<Item>(itemsForPage, count, pageNumber, pageSize));
         }
     }
 }

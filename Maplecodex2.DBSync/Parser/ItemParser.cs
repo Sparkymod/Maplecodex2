@@ -15,7 +15,7 @@ namespace Maplecodex2.Data.Parser
         public static Dictionary<int, Item> Parse()
         {
             Dictionary<int, Item> itemList = new();
-            XmlDocument itemname = DataHelper.ReadDataFromXml(Paths.XML_ITEM);
+            XmlDocument itemname = FileHelper.ReadDataFromXml(Paths.XML_ITEM);
             XmlNodeList? itemNodes = itemname.SelectNodes("ms2/key");
             
             ConsoleUtility.TotalProgressCount = itemNodes.Count;
@@ -46,7 +46,7 @@ namespace Maplecodex2.Data.Parser
             Log.Logger.Information($"Adding extra data to items...\n".Yellow());
 
             List<string> itemPreset = new();
-            List<string> files = DataHelper.GetAllFilesFrom(Paths.XML_ROOT, "item");
+            List<string> files = FileHelper.GetAllFilesFrom(Paths.XML_ROOT, "item");
 
             ConsoleUtility.TotalProgressCount = files.Count;
             ConsoleUtility.ProgressCount = 1;
@@ -59,7 +59,7 @@ namespace Maplecodex2.Data.Parser
 
                 int id = int.Parse(Path.GetFileNameWithoutExtension(file));
                 // Read and save the XML in document.
-                XmlDocument? document = DataHelper.ReadDataFromXml(file);
+                XmlDocument? document = FileHelper.ReadDataFromXml(file);
                 if (document == null) 
                 {
                     continue; 

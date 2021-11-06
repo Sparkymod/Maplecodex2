@@ -9,7 +9,7 @@ namespace Maplecodex2.DBSync.Parser
         public static Dictionary<int, List<Node>> Parse()
         {
             Dictionary<int, List<Node>> itemXml = new();
-            List<string> files = DataHelper.GetAllFilesFrom(Paths.XML_ROOT, "item");
+            List<string> files = FileHelper.GetAllFilesFrom(Paths.XML_ROOT, "item");
 
             ConsoleUtility.TotalProgressCount = files.Count;
             ConsoleUtility.ProgressCount = 1;
@@ -22,7 +22,7 @@ namespace Maplecodex2.DBSync.Parser
 
                 int id = int.Parse(Path.GetFileNameWithoutExtension(file));
 
-                XmlDocument? document = DataHelper.ReadDataFromXml(file);
+                XmlDocument? document = FileHelper.ReadDataFromXml(file);
                 XmlNode ms2 = document.SelectSingleNode("ms2");
 
                 if (ms2 == null) { continue; }

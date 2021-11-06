@@ -26,22 +26,15 @@ namespace Maplecodex2.Data.Extensions
         /// <returns>true if string contains the input string; otherwise, false.</returns>
         public static bool CompareWith(this string input, string comparer)
         {
-            if (input == null || comparer == null) 
-            {  
-                return false; 
-            }
-
-            string newInput = SpecialRegex.Replace(input.ToLowerInvariant(), "");
-            string newComparer = SpecialRegex.Replace(comparer.ToLowerInvariant(), "");
-
-            if (newInput.Contains(newComparer))
-            {
-                return true;
-            }
-            else
+            if (input == null || comparer == null)
             {
                 return false;
             }
+
+            string newInput = SpecialRegex.Replace(input.ToLowerInvariant(), "").TrimEnd();
+            string newComparer = SpecialRegex.Replace(comparer.ToLowerInvariant(), "").TrimEnd();
+
+            return newInput.Contains(newComparer);
         }
 
         /// <summary>
