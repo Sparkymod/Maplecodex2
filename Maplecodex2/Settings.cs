@@ -1,6 +1,4 @@
-﻿using Maplecodex2.Data.Helpers;
-using Maplecodex2.Database;
-using Serilog;
+﻿using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -12,8 +10,6 @@ namespace Maplecodex2
         public static void InitDatabase()
         {
             DotEnv.Load();
-            using DatabaseContext Context = new ();
-            Context.InitDatabase();
         }
 
         /// <summary>
@@ -30,6 +26,8 @@ namespace Maplecodex2
 
             return $"server={server};port={port};database={name};user={user};password={password}";
         }
+
+        public static string GetXmlPath() => Environment.GetEnvironmentVariable("XML_PATH");
 
         public static Logger InitializeSerilog()
         {
@@ -61,7 +59,7 @@ namespace Maplecodex2
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
                 .WriteTo.Console(theme: Theme.RDKSerilogTheme, outputTemplate: Template)
-                .WriteTo.File(Path.Combine(Paths.SOLUTION_DIR, "maplecodex2.log"), LogEventLevel.Error);
+                .WriteTo.File(Path.Combine("maplecodex2.log"), LogEventLevel.Error);
         }
     }
 
@@ -147,11 +145,24 @@ namespace Maplecodex2
 
         public static void Load(string filepath = ".env")
         {
-            FilePath = Path.Combine(Paths.SOLUTION_DIR, filepath);
+            FilePath = Path.Combine(Environment.CurrentDirectory, filepath);
+
+            Log.Logger.Information(Environment.CurrentDirectory);
 
             if (!File.Exists(FilePath))
             {
-                throw new ArgumentException(".env file not found!");
+                StreamWriter writer = new(FilePath) { AutoFlush = true };
+
+                writer.WriteLine("# Database Info");
+                writer.WriteLine("DB_IP=localhost");
+                writer.WriteLine("DB_PORT=3306");
+                writer.WriteLine("DB_NAME=ms2codex");
+                writer.WriteLine("DB_USER=root");
+                writer.WriteLine("DB_PASSWORD=fh,B8WseKCRG&D6S");
+                writer.WriteLine("DEVELOPMENT=true");
+                writer.WriteLine("USE_URL=http://localhost:5000");
+                writer.WriteLine("XML_PATH=");
+                writer.Close();
             }
             foreach (string line in File.ReadAllLines(FilePath))
             {

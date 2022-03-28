@@ -1,8 +1,25 @@
 ﻿@page "/"
+@using Maple2.File.Parser.Xml.Item
+@using Maplecodex2.Data.Helpers
 
 <!-- Logo -->
 <nav class="nav navbar unselectable">
-    <a href="http://ludari.online" class="container"><img src=/site_logo.png /></a>
+    <a href="http://rafamod.com" class="container"><img src=site_logo.png /></a>
 </nav>
-<!-- Render Result Page.-->
-<Results />
+
+<ItemDetails Id=@Id Name=@Name Item=@Item />
+
+
+@code {
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public ItemData Item { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        DataHelper data = new();
+        (Id, Name, Item) = data.InitParser();
+
+        base.OnInitialized();
+    }
+}

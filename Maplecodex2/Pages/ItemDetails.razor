@@ -1,36 +1,37 @@
 ﻿@page "/item/{Id:int}"
+@using Maple2.File.Parser.Xml.Item
 
-<div class="center_item">
-    <div class="outer item_info">
-        <table class="itemwhite_table">
-            <tbody>
-                <tr>
-                    <td colspan="2">@Id</td>
-                </tr>
-                <tr>
-                    <td>☆☆☆☆☆</td>
-                </tr>
-                <tr>
-                    <td class="item-icon">
-                        <div style="margin-top: 10px;">
-                            <DisplayIcon itemIcon="icon0.png" />
-                        </div>
-                    </td>
-                    <td>
-                        ITEM_NAME
-                        <br />
-                        <span>
-                            WEAPON_ATTACK
-                        </span>
-                    </td>
-                </tr>
-                <tr><td colspan="2"><hr class="hr_long"></td></tr>
-            </tbody>
-        </table>
+<div class="p-3 items">
+    <div class="card">
+        <div class="card-header">
+            <!-- Load ICON -->
+            <img src="@GetIcon()" class="img-thumbnail" width="60vh" height="60vh">
+            <div>
+                <!-- Load Item Name and ID -->
+                <h4>@Name</h4>
+                <small class="text-muted">@Id</small>
+            </div>
+        </div>
+        <div class="card-header text-muted"> ★☆☆☆☆ </div>
+        <div class="card-header text-muted"> @Item. </div>
+        <div class="card-body">
+            <!-- Load Item Description -->
+            <p class="card-text">Description</p>
+        </div>
+        <div class="card-footer">
+            <!-- Load Item Price -->
+            <small class="text-muted">Tradeable</small>
+        </div>
     </div>
 </div>
 
 @code {
     [Parameter]
     public int Id { get; set; }
+    [Parameter]
+    public string Name { get; set; }
+    [Parameter]
+    public ItemData Item { get; set; } = null!;
+
+    public string GetIcon() => Item.property.slotIcon.Contains("icon0.png") ? Item.property.slotIconCustom : Item.property.slotIcon;
 }

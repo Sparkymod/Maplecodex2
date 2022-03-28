@@ -1,88 +1,41 @@
-﻿using Maplecodex2.Data.Models;
-using Maplecodex2.Data.Services;
-using Maplecodex2.Database.Core;
+﻿using Maple2.File.IO;
+using Maple2.File.Parser;
+using Maple2.File.Parser.Tools;
+using Maple2.File.Parser.Xml.Item;
+using Maple2.File.Parser.Xml.String;
+using Maple2.File.Parser.Xml;
 using Serilog;
-using System.Diagnostics;
 
 namespace Maplecodex2.Data.Helpers
 {
     public class DataHelper
     {
-        public string LastSearch { get; private set; }
-
-        public DataHelper()
+        public (int id, string name, ItemData data) InitParser()
         {
-            LastSearch = "";
-        }
-
-        public List<PagingLink> CreatePaginationLinks(PagedList<Item> pagedList, int paginationSize)
-        {
-            List<PagingLink> links = new();
-
-            PagingLink newPage = new(pagedList.CurrentPage - 1, pagedList.HasPrevious, "Previous", "Previous page");
-            links.Add(newPage);
-
-            newPage = new(1, pagedList.HasPrevious, "<<", "First page");
-            links.Add(newPage);
-
-            for (int pageNumber = 1; pageNumber <= pagedList.TotalPages; pageNumber++)
+            (int id, string name, ItemData data) result = new(1, "", new ItemData());
+            try
             {
-                newPage = new(pageNumber, true, pageNumber.ToString(), $"Page {pageNumber}");
+                var reader = new M2dReader(Settings.GetXmlPath());
 
-                if (pageNumber == pagedList.CurrentPage)
+                // LOCALE: "TW", "TH", "NA", "CN", "JP", "KR"
+                // ENV:    "Dev", "Qa", "DevStage", "Stage", "Live"
+                Filter.Load(reader, "NA", "Live");
+                var parser = new ItemParser(reader);
+
+                foreach ((int id, string name, ItemData data) in parser.Parse())
                 {
-                    newPage.Active = pagedList.CurrentPage == pageNumber;
+                    // Extract fields from ItemData that are needed.
+                    result = (id,name, data);
+                    break;
                 }
-                if (pageNumber >= pagedList.CurrentPage && pageNumber <= pagedList.CurrentPage + paginationSize)
-                {
-                    links.Add(newPage);
-                }
-                else if (pageNumber >= pagedList.CurrentPage - paginationSize && pageNumber <= pagedList.CurrentPage && pageNumber + paginationSize >= pagedList.TotalPages)
-                {
-                    links.Add(newPage);
-                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e.Message);
+                throw;
             }
 
-            // Show the last page available
-            newPage = new(pagedList.TotalPages, pagedList.HasNext, ">>", "Last page");
-            links.Add(newPage);
-
-            newPage = new(pagedList.CurrentPage + 1, pagedList.HasNext, "Next", "Next page");
-            links.Add(newPage);
-            return links;
-        }
-
-        internal bool VerifyNewSearch(string search)
-        {
-            if (LastSearch != search)
-            {
-                LastSearch = search;
-                return true;
-            }
-
-            return false;
-        }
-
-        internal void FirstInitialize(string search)
-        {
-            LastSearch = search;
-        }
-    }
-
-    public static class Timerwatch
-    {
-        private static Stopwatch? Watch { get; set; }
-
-        public static void Start()
-        {
-            Watch = new Stopwatch();
-            Watch.Start();
-        }
-
-        public static void Stop()
-        {
-            Watch.Stop();
-            Log.Logger.Information(Watch.Elapsed.ToString());
         }
     }
 }

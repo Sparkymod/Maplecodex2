@@ -280,3 +280,29 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+
+/* ============================
+           MAPLECODEX2
+   ============================
+*/
+
+.items{
+    display: flex; 
+    width: 100%; 
+    align-items: stretch;
+}
+
+.items .card-header{
+    display: flex;
+    gap: 0.5vh;
+}
+
+.items .card-header div{
+    display: flex; 
+    flex-direction: column;
+}
+
+.items .card-header div h4{
+    display: contents;
+}
