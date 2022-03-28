@@ -43,7 +43,7 @@ namespace Maplecodex2.Data.Models
                 if (environment != null)
                 {
                     int id = int.Parse(Path.GetFileNameWithoutExtension(item.Name));
-                    ItemInfo info = new ItemInfo()
+                    ItemInfo info = new ()
                     {
                         Id = id,
                         Name = itemNames.GetValueOrDefault(id),
