@@ -1,5 +1,6 @@
 ﻿@page "/item/{Id:int}"
 @using Maple2.File.Parser.Xml.Item
+@using Maplecodex2.Data.Models
 
 <div class="p-3 items">
     <div class="card">
@@ -8,15 +9,15 @@
             <img src="@GetIcon()" class="img-thumbnail" width="60vh" height="60vh">
             <div>
                 <!-- Load Item Name and ID -->
-                <h4>@Name</h4>
-                <small class="text-muted">@Id</small>
+                <h4>@ItemInfo.Info.Name</h4>
+                <small class="text-muted">@ItemInfo.Info.Id</small>
             </div>
         </div>
         <div class="card-header text-muted"> ★☆☆☆☆ </div>
-        <div class="card-header text-muted"> @Item. </div>
+        <div class="card-header text-muted"><b>Type:</b>@ItemInfo.Info.Type </div>
         <div class="card-body">
             <!-- Load Item Description -->
-            <p class="card-text">Description</p>
+            <p class="card-text">@ItemInfo.Info.Description</p>
         </div>
         <div class="card-footer">
             <!-- Load Item Price -->
@@ -27,11 +28,7 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
-    [Parameter]
-    public string Name { get; set; }
-    [Parameter]
-    public ItemData Item { get; set; } = null!;
+    public Item ItemInfo { get; set; }
 
-    public string GetIcon() => Item.property.slotIcon.Contains("icon0.png") ? Item.property.slotIconCustom : Item.property.slotIcon;
+    public string GetIcon() => ItemInfo.Data.property.slotIcon.Contains("icon0.png") ? ItemInfo.Data.property.slotIconCustom : ItemInfo.Data.property.slotIcon;
 }

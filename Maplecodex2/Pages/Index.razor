@@ -1,24 +1,23 @@
 ﻿@page "/"
 @using Maple2.File.Parser.Xml.Item
 @using Maplecodex2.Data.Helpers
+@using Maplecodex2.Data.Models
 
 <!-- Logo -->
 <nav class="nav navbar unselectable">
     <a href="http://rafamod.com" class="container"><img src=site_logo.png /></a>
 </nav>
 
-<ItemDetails Id=@Id Name=@Name Item=@Item />
+<ItemDetails ItemInfo=@ItemInfo />
 
 
 @code {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public ItemData Item { get; set; } = null!;
+    public Item ItemInfo { get; set; }
 
     protected override void OnInitialized()
     {
         DataHelper data = new();
-        (Id, Name, Item) = data.InitParser();
+        ItemInfo = data.InitParser();
 
         base.OnInitialized();
     }
