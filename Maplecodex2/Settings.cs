@@ -158,7 +158,7 @@ namespace Maplecodex2
                 writer.WriteLine("DB_PORT=3306");
                 writer.WriteLine("DB_NAME=ms2codex");
                 writer.WriteLine("DB_USER=root");
-                writer.WriteLine("DB_PASSWORD=fh,B8WseKCRG&D6S");
+                writer.WriteLine("DB_PASSWORD=admin");
                 writer.WriteLine("DEVELOPMENT=true");
                 writer.WriteLine("USE_URL=http://localhost:5000");
                 writer.WriteLine("XML_PATH=");
