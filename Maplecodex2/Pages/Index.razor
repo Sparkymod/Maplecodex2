@@ -2,23 +2,72 @@
 @using Maple2.File.Parser.Xml.Item
 @using Maplecodex2.Data.Helpers
 @using Maplecodex2.Data.Models
+@using Maplecodex2.Data.Services
+@using Maplecodex2.Database.Pagination
+
+@inject ItemService ItemServices
 
 <!-- Logo -->
 <nav class="nav navbar unselectable">
     <a href="http://rafamod.com" class="container"><img src=site_logo.png /></a>
 </nav>
 
-<ItemDetails ItemInfo=@ItemInfo />
+@inherits DataViewModel<Item>
 
+<!-- Search container -->
+<div class="item-align-flex unselectable">
+    <!-- Filters -->
+    <div class="item-align-columns">
+        <div>
+            <label style="padding-left: 1vh;">
+                Filter
+                <select @bind="@SelectedOption" class="custom-select select-options option-fix" id="inputGroupSelect01">
+                    <option value="0">ALL</option>
+                    <option value="1">Id</option>
+                    <option value="2">Name</option>
+                    <option value="3">Type</option>
+                </select>
+            </label>
+            <input @bind="@SearchBy" onselect="@ShowResults()" id="searchInput" class="form-inline mr-sm-2 option-fix" placeholder="Search..." />
+        </div>
+    </div>
 
-@code {
-    public Item ItemInfo { get; set; }
+    <!-- Page options -->
+    <div class="show-more">
+        <label style="padding-left: 1vh;">
+            Show
+            <select @bind="@PageSize" class="form-inline input-sm">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+        </label>
+    </div>
+</div>
 
-    protected override void OnInitialized()
-    {
-        DataHelper data = new();
-        ItemInfo = data.InitParser();
+<!-- Table Results -->
+<ErrorBoundary>
+    <ChildContent>
+        <ItemsTable List="@PagedResults.Items" />
+    </ChildContent>
+</ErrorBoundary>
 
-        base.OnInitialized();
-    }
-}
+<!-- Pagination -->
+<nav>
+    <!--Results count-->
+    <div class="item-align-columns container-flex">
+        <div class="show-more">
+            <label style="padding-left: 1vh;">
+                @(ItemServices.ResultsFromQuery.Count) Results where found.
+            </label>
+        </div>
+    </div>
+    <ul class="pagination pagination-sm justify-content-center">
+        @foreach (PagingLink link in Links)
+        {
+            <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
+                <span style="@(char.IsDigit(link.Text, 0) ? "width: 3.5rem; text-align: center;" : null)" class="unselectable btn-toolbar page-link span-color" href="#" data-toggle="tooltip" data-placement="bottom" title="@link.Info">@link.Text</span>
+            </li>
+        }
+    </ul>
+</nav>

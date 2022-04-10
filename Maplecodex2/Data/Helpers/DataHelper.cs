@@ -1,38 +1,44 @@
-﻿using Serilog;
-using Maplecodex2.Data.Maple2Custom;
-using Maplecodex2.Data.Models;
-using Maple2.File.IO;
-using Maple2.File.Parser.Tools;
+﻿using Maplecodex2.Database.Pagination;
 
 namespace Maplecodex2.Data.Helpers
 {
     public class DataHelper
     {
-        public Item InitParser()
+        public List<PagingLink> CreatePaginationLinks<T>(PagedList<T> pagedList, int paginationSize)
         {
-            Item result = new();
+            List<PagingLink> links = new();
 
-            try
+            PagingLink newPage = new(pagedList.CurrentPage - 1, pagedList.HasPrevious, "Anterior", "Página anterior");
+            links.Add(newPage);
+
+            newPage = new(1, pagedList.HasPrevious, "<<", "Primera página");
+            links.Add(newPage);
+
+            for (int pageNumber = 1; pageNumber <= pagedList.TotalPages; pageNumber++)
             {
-                var reader = new M2dReader(Settings.GetXmlPath());
+                newPage = new(pageNumber, true, pageNumber.ToString(), $"Página {pageNumber}");
 
-                // LOCALE: "TW", "TH", "NA", "CN", "JP", "KR"
-                // ENV:    "Dev", "Qa", "DevStage", "Stage", "Live"
-                Filter.Load(reader, "NA", "Live");
-
-                IEnumerable<Item> parser = new ItemParser(reader).Parse();
-                result = parser.Where(item => item.Info.Id == 11020005).Select(x => x).FirstOrDefault();
-
-                reader.Dispose();
-
-                return result;
-            }
-            catch (Exception e)
-            {
-                Log.Logger.Error(e.Message);
-                throw;
+                if (pageNumber == pagedList.CurrentPage)
+                {
+                    newPage.Active = pagedList.CurrentPage == pageNumber;
+                }
+                if (pageNumber >= pagedList.CurrentPage && pageNumber <= pagedList.CurrentPage + paginationSize)
+                {
+                    links.Add(newPage);
+                }
+                else if (pageNumber >= pagedList.CurrentPage - paginationSize && pageNumber <= pagedList.CurrentPage && pageNumber + paginationSize >= pagedList.TotalPages)
+                {
+                    links.Add(newPage);
+                }
             }
 
+            // Show the last page available
+            newPage = new(pagedList.TotalPages, pagedList.HasNext, ">>", "Última página");
+            links.Add(newPage);
+
+            newPage = new(pagedList.CurrentPage + 1, pagedList.HasNext, "Siguiente", "Página siguiente");
+            links.Add(newPage);
+            return links;
         }
     }
 }

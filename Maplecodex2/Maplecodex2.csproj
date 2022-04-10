@@ -35,9 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\Core\" />
-    <Folder Include="Data\Extensions\" />
-    <Folder Include="Data\Services\" />
     <Folder Include="db\" />
   </ItemGroup>
 
