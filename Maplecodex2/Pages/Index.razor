@@ -1,16 +1,13 @@
 ﻿@page "/"
+
 @using Maple2.File.Parser.Xml.Item
 @using Maplecodex2.Data.Helpers
 @using Maplecodex2.Data.Models
 @using Maplecodex2.Data.Services
 @using Maplecodex2.Database.Pagination
+@using Maplecodex2.Pages.Tables
 
 @inject ItemService ItemServices
-
-<!-- Logo -->
-<nav class="nav navbar unselectable">
-    <a href="http://rafamod.com" class="container"><img src=site_logo.png /></a>
-</nav>
 
 @inherits DataViewModel<Item>
 
@@ -22,7 +19,7 @@
             <label style="padding-left: 1vh;">
                 Filter
                 <select @bind="@SelectedOption" class="custom-select select-options option-fix" id="inputGroupSelect01">
-                    <option value="0">ALL</option>
+                    <option value="0" selected></option>
                     <option value="1">Id</option>
                     <option value="2">Name</option>
                     <option value="3">Type</option>
@@ -48,7 +45,7 @@
 <!-- Table Results -->
 <ErrorBoundary>
     <ChildContent>
-        <ItemsTable List="@PagedResults.Items" />
+        <ItemsTable Items="@PagedResults.Items" />
     </ChildContent>
 </ErrorBoundary>
 
@@ -71,3 +68,35 @@
         }
     </ul>
 </nav>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        SearchBy = string.IsNullOrEmpty(SearchBy) ? "" : SearchBy;
+        await ShowResults();
+    }
+
+    public override async Task ShowResults()
+    {
+        bool newSearch = Helper.VerifyNewSearch(SearchBy, SelectedOption, PageSize);
+        // Restore page 1 whenever is a new search.
+        if (CurrentLink != null && CurrentLink.Page > 1 && newSearch)
+        {
+            CurrentLink.Page = 1;
+        }
+
+        PagedResults = await ItemServices.GetItemsAsync(newSearch, SearchBy, SelectedOption, (CurrentLink?.Page ?? 1), PageSize);
+
+        if (PagedResults == null)
+        {
+            return;
+        }
+
+        if (Links != null && Links.Any())
+        {
+            Links.Clear();
+        }
+
+        Links = Helper.CreatePaginationLinks(PagedResults, 5);
+    }
+}

@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+
+@using Maplecodex2.Pages.Website
+
+<PageTitle>MapleCodex 2 v1.1</PageTitle>
+
+<!-- Header -->
+<Header />
+
+<!-- Content -->
+<section>
+    <div class="container">
+        <ErrorBoundary>
+            <ChildContent>
+                @Body
+            </ChildContent>
+            <ErrorContent>
+                <h2 class="alert-danger">Error loading content...</h2>
+            </ErrorContent>
+        </ErrorBoundary>
+    </div>
+</section>
+
+<!-- Footer -->
+<Footer />

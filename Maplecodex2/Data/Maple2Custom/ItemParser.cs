@@ -3,9 +3,9 @@ using System.Xml;
 using Maple2.File.IO.Crypto.Common;
 using Maple2.File.Parser.Xml.Item;
 using Maple2.File.IO;
-using Maplecodex2.Data.Maple2Custom;
+using Maplecodex2.Data.Models;
 
-namespace Maplecodex2.Data.Models
+namespace Maplecodex2.Data.Maple2Custom
 {
     public class ItemParser
     {

@@ -10,7 +10,6 @@ namespace Maplecodex2.Data.Models
         public PagedList<T> PagedResults { get; set; }
         public List<PagingLink> Links { get; set; } = new();
         public PagingLink CurrentLink { get; set; }
-        public bool IsLoading { get; set; } = true;
 
         [Parameter] public int PageSize { get; set; } = 10;
         [Parameter] public string SearchBy { get; set; }

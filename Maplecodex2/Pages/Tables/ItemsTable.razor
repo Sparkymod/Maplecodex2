@@ -1,0 +1,39 @@
+﻿﻿@using Maple2.File.Parser.Xml.Item
+@using Maplecodex2.Data.Models
+@using Maplecodex2.Pages.Components
+
+@inject NavigationManager Navigation
+
+<!-- Item Datatable -->
+<div class="block--category">
+    <table class="block-body table table-bordered">
+        <thead>
+            <tr role="row" class="unselectable">
+                <th rowspan="1" colspan="1">Icon</th>
+                <th rowspan="1" colspan="1">ID</th>
+                <th rowspan="1" colspan="1">Name</th>
+                <th rowspan="1" colspan="1">Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Item newItem in Items)
+            {
+                <tr role="row" @onclick=" () => GetItemSelected(newItem.Info.Id)">
+                    <DisplayIcon Item="@newItem.Data.property" />
+                    <td class="col-xs-1 unselectable uncopied" id="itemTableId">@newItem.Info.Id</td>
+                    <td class="col-xs-5">@newItem.Info.Name</td>
+                    <td class="col-xs-1">@newItem.Info.Type</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@code {
+    [Parameter]
+    public IEnumerable<Item> Items { get; set; }
+
+    private void GetItemSelected(int id)
+    {
+        Navigation.NavigateTo(Navigation.BaseUri +"item/"+ id);
+    }
+}

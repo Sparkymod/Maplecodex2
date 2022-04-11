@@ -1,0 +1,11 @@
+﻿@using Maple2.File.Parser.Xml.Item
+<td class="col-xs-1 unselectable" style="width: 55px;">
+    <div>
+        <div class=" img-thumbnail" style="padding: 3px; margin:-5px;"><img src="@(Item.slotIcon.Contains("icon0.png") ? Item.slotIconCustom : Item.slotIcon)" width="30vh" height="30vh"></div>
+    </div>
+</td>
+
+@code {
+    [Parameter]
+    public Property Item { get; set; }
+}

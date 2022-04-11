@@ -2,6 +2,7 @@
 using Maplecodex2.Data.Models;
 using Maple2.File.IO;
 using Maple2.File.Parser.Tools;
+using Maplecodex2.Data.Maple2Custom;
 
 namespace Maplecodex2.Data.Services
 {
@@ -15,10 +16,10 @@ namespace Maplecodex2.Data.Services
         public DataHelperService()
         {
             Log.Logger.Warning("Initializing services... Please Wait");
-            ItemList = InitParser().ToList();
+            ItemList = InitParser();
         }
 
-        public IEnumerable<Item> InitParser()
+        public List<Item> InitParser()
         {
             try
             {
@@ -28,10 +29,7 @@ namespace Maplecodex2.Data.Services
                 // ENV:    "Dev", "Qa", "DevStage", "Stage", "Live"
                 Filter.Load(reader, "NA", "Live");
 
-                IEnumerable<Item> parser = new ItemParser(reader).Parse();
-
-                reader.Dispose();
-                return parser;
+                return new ItemParser(reader).Parse().ToList();
             }
             catch (Exception e)
             {

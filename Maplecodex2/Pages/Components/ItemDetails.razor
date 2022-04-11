@@ -1,0 +1,43 @@
+﻿@page "/item/{Id:int}"
+@using Maple2.File.Parser.Xml.Item
+@using Maplecodex2.Data.Models
+@using Maplecodex2.Data.Services
+
+<div class="p-3 items">
+    <div class="card">
+        <div class="card-header">
+            <!-- Load ICON -->
+            <img src="@GetIcon()" class="img-thumbnail" width="60vh" height="60vh">
+            <div>
+                <!-- Load Item Name and ID -->
+                <h4>@CurrentItem.Info.Name</h4>
+                <small class="text-muted">@CurrentItem.Info.Id</small>
+            </div>
+        </div>
+        <div class="card-header text-muted"> ★☆☆☆☆☆ </div>
+        <div class="card-header text-muted"><b>Type:</b>@CurrentItem.Info.Type </div>
+        <div class="card-body">
+            <!-- Load Item Description -->
+            <p class="card-text">@CurrentItem.Info.Description</p>
+        </div>
+        <div class="card-footer">
+            <!-- Load Item Price -->
+            <small class="text-muted">Tradeable</small>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Item CurrentItem { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+
+    public string GetIcon() => CurrentItem.Data.property.slotIcon.Contains("icon0.png") ? CurrentItem.Data.property.slotIconCustom : CurrentItem.Data.property.slotIcon;
+
+    protected override Task OnInitializedAsync()
+    {
+        CurrentItem = DataHelperService.Instance.ItemList.Find(x => x.Info.Id == Id);
+        return base.OnInitializedAsync();
+    }
+}
