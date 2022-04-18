@@ -224,3 +224,11 @@
     .header-style .info span {
         margin-bottom: -6px;
     }
+
+
+.more-info {
+    font-size: 10px;
+    font-weight: 500;
+    font-style: italic;
+    color: black;
+}
