@@ -29,7 +29,7 @@ namespace Maplecodex2.Data.Services
                 // ENV:    "Dev", "Qa", "DevStage", "Stage", "Live"
                 Filter.Load(reader, "NA", "Live");
 
-                return new ItemParser(reader).Parse().ToList();
+                return new ItemParser(reader).Parse();
             }
             catch (Exception e)
             {

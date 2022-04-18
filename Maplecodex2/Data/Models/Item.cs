@@ -16,5 +16,6 @@ namespace Maplecodex2.Data.Models
         public string Name;
         public string Description;
         public string Type;
+        public List<int?> Rarities;
     }
 }

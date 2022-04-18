@@ -2,42 +2,156 @@
 @using Maple2.File.Parser.Xml.Item
 @using Maplecodex2.Data.Models
 @using Maplecodex2.Data.Services
+@using static Maple2.File.Parser.Xml.Item.Slot
 
-<div class="p-3 items">
-    <div class="card">
-        <div class="card-header">
-            <!-- Load ICON -->
-            <img src="@GetIcon()" class="img-thumbnail" width="60vh" height="60vh">
-            <div>
-                <!-- Load Item Name and ID -->
-                <h4>@CurrentItem.Info.Name</h4>
-                <small class="text-muted">@CurrentItem.Info.Id</small>
+<div class="card2-flex">
+    <div class="card2 ">
+        <!-- Title for the post -->
+        <div class="card2-header">
+            <div class="rarity-selector">
+                <span class="name @SetRarityCSS(_selectRarity)">@CurrentItem.Info.Name</span>
+                @if (CurrentItem.Info.Rarities != null)
+                {
+                    <select @bind="@_selectRarity">
+                        @foreach (int? rarity in CurrentItem.Info.Rarities)
+                        {
+                            <option value="@rarity">@SetRarityCSS(rarity)</option>
+                        }
+                    </select>
+                }
+            </div>
+            <span class="star @SetRarityCSS(_selectRarity)">★☆☆☆☆☆</span>
+            <div class="info">
+                <img class="header-style shadow-style rarity @SetRarityCSS(_selectRarity)" src="@GetIcon()" alt="">
+                <div class="info-details">
+                    <span class="id">ID: @CurrentItem.Info.Id</span>
+                    <span class="gear">Weapon Attack</span>
+                    <span class="number @SetRarityCSS(_selectRarity)">0~2</span>
+                </div>
+            </div>
+            <div class="info-details">
+                <span class="gear">Gear Score <span class="gear" style="color: blue;">{#}</span></span>
+                <span class="level">Require Level <span class="gear" style="color: blue;">{#}</span></span>
+                <span class="weapon_type">Weapon Type</span>
             </div>
         </div>
-        <div class="card-header text-muted"> ★☆☆☆☆☆ </div>
-        <div class="card-header text-muted"><b>Type:</b>@CurrentItem.Info.Type </div>
-        <div class="card-body">
-            <!-- Load Item Description -->
-            <p class="card-text">@CurrentItem.Info.Description</p>
+
+        @if (!string.IsNullOrEmpty(@CurrentItem.Info.Description))
+        {
+            <!-- Content for the post -->
+            <div class="card2-content">
+                <!-- We can have as many span for contents as we want -->
+            <span>@CurrentItem.Info.Description</span>
+            </div>
+        }
+
+        <!-- Footer for the post -->
+        <div class="card2-footer">
+            <img src="img/info-48.png" alt="">
+            <button @onclick="( () => _isLoading = !_isLoading)"><b>More info</b></button>
         </div>
-        <div class="card-footer">
-            <!-- Load Item Price -->
-            <small class="text-muted">Tradeable</small>
-        </div>
+        @if (_isLoading)
+        {
+            <!-- Content for the post -->
+            <!-- We can have as many span for contents as we want -->
+            <div class="card2-content">
+                @RenderBasic
+                @RenderSlots
+                @RenderMutation
+                @RenderCutting
+                @RenderInstall
+            </div>
+        }
     </div>
 </div>
 
 @code {
-    [Parameter]
-    public Item CurrentItem { get; set; }
-    [Parameter]
-    public int Id { get; set; }
+    private bool _loadSlots;
 
-    public string GetIcon() => CurrentItem.Data.property.slotIcon.Contains("icon0.png") ? CurrentItem.Data.property.slotIconCustom : CurrentItem.Data.property.slotIcon;
+    private RenderFragment RenderBasic => __builder =>
+            {
+                <div>
+                    <span>Basic</span>
+                    <div class="item">
+                        <span>friendly: <span class="number"> @CurrentItem.Data.basic.friendly </span></span>
+                        <span>originID: <span class="number"> @CurrentItem.Data.basic.originID </span></span>
+                        <span>stringTag: <span class="number">@CurrentItem.Data.basic.stringTag</span></span>
+                    </div>
+                </div>
+            };
 
-    protected override Task OnInitializedAsync()
+    private RenderFragment RenderSlots => __builder =>
     {
-        CurrentItem = DataHelperService.Instance.ItemList.Find(x => x.Info.Id == Id);
-        return base.OnInitializedAsync();
-    }
+        <div>
+            <span>Slots</span>
+            <div class="item">
+                <span style="color: green;" @onclick="( () => _loadSlots = !_loadSlots)" type="button">Slots found: <span class="number">@CurrentItem.Data.slots.slot.Count</span></span>
+                @if (_loadSlots)
+                {
+                    @foreach (var slot in CurrentItem.Data.slots.slot)
+                    {
+                        <span>name: <span class="number">@slot.name</span></span>
+                        <span>assets: <span class="number">~</span></span>
+                        <span>scale: <span class="number">~</span></span>
+                        <span>Decal:</span>
+                        <div class="item nested-item">
+                            @foreach (var field in typeof(Decal).GetFields())
+                            {
+                                var data = field.GetValue(slot.decal);
+                                <span>@field.Name: <span class="number">@data </span></span>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    };
+
+    private RenderFragment RenderMutation => __builder =>
+    {
+        <div>
+            <span>Mutation</span>
+            <div class="item">
+                <span>interval <span class="number">@CurrentItem.Data.mutation.interval</span></span>
+                <span>changeeffect <span class="number">@CurrentItem.Data.mutation.changeeffect</span></span>
+                @foreach (var asset in CurrentItem.Data.mutation.assets)
+                {
+                    <span>asset: <span class="number">@asset</span></span>
+                }
+                @foreach (var skill in CurrentItem.Data.mutation.skills)
+                {
+                    <span>skill: <span class="number">@skill</span></span>
+                }
+            </div>
+        </div>
+    };
+
+    private RenderFragment RenderCutting => __builder =>
+    {
+        <div>
+            <span>Cutting</span>
+            <div class="item">
+                @foreach (var thisMesh in @CurrentItem.Data.cutting.mesh)
+                {
+                    <span>name: <span class="number"> @thisMesh.name </span></span>
+                    <span>gender: <span class="number"> @thisMesh.gender </span></span>
+                }
+
+            </div>
+        </div>
+    };
+
+    private RenderFragment RenderInstall => __builder =>
+    {
+        <div>
+            <span>Install</span>
+            <div class="item">
+                @foreach (var field in typeof(Install).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.install);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
+        </div>
+    };
 }

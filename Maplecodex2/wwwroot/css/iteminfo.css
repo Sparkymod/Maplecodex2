@@ -1,0 +1,227 @@
+* {
+    --common: #d5cbb7;
+    --rare: #96ff00;
+    --exceptional: #00c0ff;
+    --epic: #8900ff;
+    --legendary: #ffd533;
+    --ascendant: #ff6c00;
+}
+
+.card2-flex {
+    border-radius: 0.2rem;
+    max-width: 800px;
+    margin-top: 0.2rem;
+    padding: 0.2rem 0;
+}
+
+    .card2-flex.close {
+        bottom: 0;
+        right: 0;
+        display: none;
+    }
+
+
+.card2 {
+    font-weight: 600;
+    text-shadow: rgb(0 0 0 / 14%) 0px 1px 1px, rgb(0 0 0 / 7%) 0px 0px 1px;
+    background-color: gainsboro;
+    max-width: 50rem;
+    margin: 0.3rem;
+    border-radius: 0.2rem;
+    padding: 0.3rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px,rgba(0, 0, 0, 0.3) 0px 1px 2px;
+}
+
+    .card2 span {
+        overflow-wrap: break-word;
+        max-inline-size: 50vh;
+    }
+
+    .card2 .card2-header {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        margin-bottom: 1rem;
+    }
+
+        .card2 .card2-header .rarity-selector {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+
+        .card2 .card2-header img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .card2 .card2-header span {
+            font-size: 18px;
+            overflow-wrap: break-word;
+            max-inline-size: 40vh;
+        }
+
+        .card2 .card2-header .info {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .card2 .card2-header .info-details {
+            display: flex;
+            align-items: baseline;
+            flex-direction: column;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .card2 .card2-header .name {
+            font-size: 18px;
+            overflow-wrap: break-word;
+            height: 20px;
+        }
+
+        .card2 .card2-header .info-details .id {
+            font-size: 16px;
+            height: 24px;
+        }
+
+        .card2 .card2-header .info-details .number {
+            font-size: 26px;
+            text-shadow: rgb(0 0 0 / 40%) 0px 1px 1px, rgb(0 0 0 / 50%) 0px 0px 2px;
+            height: 20px;
+            font-weight: 400;
+        }
+
+        .card2 .card2-header .info-details .gear {
+            font-size: 14px;
+            margin-top: -5px;
+            height: 16px;
+        }
+
+        .card2 .card2-header .info-details .level {
+            font-size: 14px;
+            margin-top: 0.3rem;
+            height: 22px;
+        }
+
+        .card2 .card2-header .info-details .weapon_type {
+            font-size: 14px;
+            margin-bottom: 0.5rem;
+            height: 20px;
+        }
+
+        .card2 .card2-header .star {
+            font-size: 14px;
+        }
+
+        .card2 .card2-header .date span {
+            margin: 0;
+            font-size: 10px;
+        }
+
+    .card2 .card2-content {
+        margin: 1rem 0;
+        display: flex;
+        flex-direction: column;
+        vertical-align: central;
+        height: fit-content;
+        background-color: rgba(0, 0, 0, 0.05);
+        box-shadow: rgb(0 0 0 / 20%) 0px 1px 4px inset;
+        border-radius: 4px;
+    }
+
+        .card2 .card2-content span {
+            margin: 0.5rem;
+        }
+
+        .card2 .card2-content .item {
+            display: flex;
+            flex-direction: column;
+            width: fit-content;
+        }
+
+            .card2 .card2-content .item span {
+                margin: 0;
+                padding: 0 20px;
+                font-size: 12px;
+            }
+
+            .card2 .card2-content .item.nested-item {
+                padding: 0 10px;
+            }
+
+            .card2 .card2-content .item .number {
+                height: 20px;
+                font-weight: 600;
+                padding-left: 0.2rem;
+                color: blue;
+            }
+
+
+    .card2 .card2-footer {
+        display: flex;
+        align-items: flex-end;
+        padding-top: 0.3rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.125);
+        font-size: 10px;
+        font-style: italic;
+    }
+
+        .card2 .card2-footer img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .card2 .card2-footer button {
+            vertical-align: super;
+            all: unset;
+            cursor: pointer;
+        }
+
+    .card2 .line {
+        margin: 0 0 0.4rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+.shadow-style {
+    text-shadow: rgb(0 0 0 / 50%) 0px 1px 1px, rgb(0 0 0 / 15%) 0px 0px 4px;
+    box-shadow: rgb(0 0 0 / 20%) 0px 1px 4px inset;
+    border-radius: 4px;
+}
+
+.rarity {
+    box-shadow: rgba(41, 41, 41, 0.4) 2px 2px 12px 10px inset, rgba(44, 44, 44, 0.4) -2px -2px 12px 10px inset;
+}
+
+    .rarity.rare {
+        background: var(--rare);
+    }
+
+    .rarity.exceptional{
+        background: var(--exceptional);
+    }
+
+    .rarity.epic {
+        background: var(--epic);
+    }
+
+    .rarity.legendary {
+        background: var(--legendary);
+    }
+
+    .rarity.ascendant {
+        background: var(--ascendant);
+    }
+
+.header-style {
+    padding: 0.2rem;
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 700;
+    border: 0px solid #2c2e30;
+}
+
+    .header-style .info span {
+        margin-bottom: -6px;
+    }

@@ -5,7 +5,9 @@
 @using Maplecodex2.Data.Models
 @using Maplecodex2.Data.Services
 @using Maplecodex2.Database.Pagination
+@using Maplecodex2.Pages.Components
 @using Maplecodex2.Pages.Tables
+@using global::Serilog
 
 @inject ItemService ItemServices
 
@@ -16,80 +18,100 @@
     <!-- Filters -->
     <div class="item-align-columns">
         <div>
-            <label style="padding-left: 1vh;">
-                Filter
-                <select @bind="@SelectedOption" class="custom-select select-options option-fix" id="inputGroupSelect01">
-                    <option value="0" selected></option>
-                    <option value="1">Id</option>
-                    <option value="2">Name</option>
-                    <option value="3">Type</option>
-                </select>
-            </label>
-            <input @bind="@SearchBy" onselect="@ShowResults()" id="searchInput" class="form-inline mr-sm-2 option-fix" placeholder="Search..." />
+            @if (ItemId == 0)
+            {
+                <input @bind="@SearchBy" onselect="@ShowResults()" id="searchInput" class="form-inline mr-sm-2 option-fix" placeholder="Search..." />
+            }
+            <button class="button-3" style="margin-left:5px; margin-top: -3px;" @onclick="ResetTable">Back</button>
         </div>
     </div>
 
     <!-- Page options -->
-    <div class="show-more">
-        <label style="padding-left: 1vh;">
-            Show
-            <select @bind="@PageSize" class="form-inline input-sm">
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-            </select>
-        </label>
-    </div>
-</div>
-
-<!-- Table Results -->
-<ErrorBoundary>
-    <ChildContent>
-        <ItemsTable Items="@PagedResults.Items" />
-    </ChildContent>
-</ErrorBoundary>
-
-<!-- Pagination -->
-<nav>
-    <!--Results count-->
-    <div class="item-align-columns container-flex">
+    @if (ItemId == 0)
+    {
         <div class="show-more">
             <label style="padding-left: 1vh;">
-                @(ItemServices.ResultsFromQuery.Count) Results where found.
+                Show
+                <select @bind="@PageSize" class="form-inline input-sm">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
             </label>
         </div>
-    </div>
-    <ul class="pagination pagination-sm justify-content-center">
-        @foreach (PagingLink link in Links)
-        {
-            <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
-                <span style="@(char.IsDigit(link.Text, 0) ? "width: 3.5rem; text-align: center;" : null)" class="unselectable btn-toolbar page-link span-color" href="#" data-toggle="tooltip" data-placement="bottom" title="@link.Info">@link.Text</span>
-            </li>
-        }
-    </ul>
-</nav>
+    }
+</div>
+
+@if (ItemId == 0)
+{
+    <!-- Table Results -->
+    <ErrorBoundary>
+        <ChildContent>
+            <ItemsTable Items="@PagedResults.Items" ItemId=OnClick />
+        </ChildContent>
+    </ErrorBoundary>
+
+    <!-- Pagination -->
+    <nav>
+        <!--Results count-->
+    <div class="item-align-columns container-flex">
+            <div class="show-more">
+                <label style="padding-left: 1vh;">
+                    @(ItemServices.ResultsFromQuery.Count) Results where found.
+                </label>
+            </div>
+        </div>
+        <ul class="pagination pagination-sm justify-content-center" style="margin-bottom: 5rem;">
+            @foreach (PagingLink link in Links)
+            {
+                <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
+                    <span style="@(char.IsDigit(link.Text, 0) ? "width: 3.5rem; text-align: center;" : null)" class="unselectable btn-toolbar page-link span-color" href="#" data-toggle="tooltip" data-placement="bottom" title="@link.Info">@link.Text</span>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+else
+{
+    <ItemDetails Id=ItemId />
+}
+
 
 @code {
-    protected override async Task OnInitializedAsync()
+    public int ItemId;
+
+    private void OnClick(int value)
     {
-        SearchBy = string.IsNullOrEmpty(SearchBy) ? "" : SearchBy;
-        await ShowResults();
+        ItemId = value;
     }
 
-    public override async Task ShowResults()
+    private void ResetTable()
     {
-        bool newSearch = Helper.VerifyNewSearch(SearchBy, SelectedOption, PageSize);
+        ItemId = 0;
+    }
+
+    protected override void OnInitialized()
+    {
+        SearchBy = string.IsNullOrEmpty(SearchBy) ? "" : SearchBy;
+        ShowResults().Wait();
+    }
+
+    public override Task ShowResults()
+    {
+        bool newSearch = Helper.VerifyNewSearch(SearchBy, PageSize);
         // Restore page 1 whenever is a new search.
         if (CurrentLink != null && CurrentLink.Page > 1 && newSearch)
         {
             CurrentLink.Page = 1;
         }
 
-        PagedResults = await ItemServices.GetItemsAsync(newSearch, SearchBy, SelectedOption, (CurrentLink?.Page ?? 1), PageSize);
+        PagedResults = ItemServices.GetItemsAsync(newSearch, SearchBy, (CurrentLink?.Page ?? 1), PageSize).Result;
 
         if (PagedResults == null)
         {
-            return;
+            CancellationTokenSource ct = new();
+            Log.Warning("Results where null.");
+            return Task.FromCanceled(ct.Token);
         }
 
         if (Links != null && Links.Any())
@@ -98,5 +120,6 @@
         }
 
         Links = Helper.CreatePaginationLinks(PagedResults, 5);
+        return Task.CompletedTask;
     }
 }

@@ -5,14 +5,12 @@ namespace Maplecodex2.Data.Helpers
     public class DataHelper
     {
         public string LastSearch { get; private set; }
-        public string LastSelectedOption { get; private set; }
         public int LastPageSize { get; private set; }
 
         public DataHelper()
         {
             LastPageSize = 10;
             LastSearch = "";
-            LastSelectedOption = "";
         }
 
 
@@ -20,15 +18,15 @@ namespace Maplecodex2.Data.Helpers
         {
             List<PagingLink> links = new();
 
-            PagingLink newPage = new(pagedList.CurrentPage - 1, pagedList.HasPrevious, "Anterior", "Página anterior");
+            PagingLink newPage = new(pagedList.CurrentPage - 1, pagedList.HasPrevious, "Previous", "Previous Page");
             links.Add(newPage);
 
-            newPage = new(1, pagedList.HasPrevious, "<<", "Primera página");
+            newPage = new(1, pagedList.HasPrevious, "<<", "First Page");
             links.Add(newPage);
 
             for (int pageNumber = 1; pageNumber <= pagedList.TotalPages; pageNumber++)
             {
-                newPage = new(pageNumber, true, pageNumber.ToString(), $"Página {pageNumber}");
+                newPage = new(pageNumber, true, pageNumber.ToString(), $"Page {pageNumber}");
 
                 if (pageNumber == pagedList.CurrentPage)
                 {
@@ -45,25 +43,19 @@ namespace Maplecodex2.Data.Helpers
             }
 
             // Show the last page available
-            newPage = new(pagedList.TotalPages, pagedList.HasNext, ">>", "Última página");
+            newPage = new(pagedList.TotalPages, pagedList.HasNext, ">>", "Last Page");
             links.Add(newPage);
 
-            newPage = new(pagedList.CurrentPage + 1, pagedList.HasNext, "Siguiente", "Página siguiente");
+            newPage = new(pagedList.CurrentPage + 1, pagedList.HasNext, "Next", "Next Page");
             links.Add(newPage);
             return links;
         }
 
-        public bool VerifyNewSearch(string search, string option, int pageSize)
+        public bool VerifyNewSearch(string search, int pageSize)
         {
             if (LastSearch != search)
             {
                 LastSearch = search;
-                return true;
-            }
-
-            if (LastSelectedOption != option)
-            {
-                LastSelectedOption = option;
                 return true;
             }
 
