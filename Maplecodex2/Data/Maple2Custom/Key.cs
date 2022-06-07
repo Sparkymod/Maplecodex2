@@ -25,6 +25,9 @@ namespace Maplecodex2.Data.Maple2Custom
         public string _locale = string.Empty;
 
         [XmlAttribute]
+        public string mainDescription = string.Empty;
+
+        [XmlAttribute]
         public string tooltipDescription = string.Empty;
 
         [XmlAttribute]
