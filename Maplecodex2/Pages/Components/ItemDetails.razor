@@ -82,7 +82,7 @@
                 @RenderPCBang
                 @RenderMusicScore
                 @RenderHousing
-                
+
             </div>
         }
     </div>
@@ -186,6 +186,26 @@
                 @foreach (var field in typeof(Property).GetFields())
                 {
                     var data = field.GetValue(CurrentItem.Data.property);
+                    if (data is Property.Sell)
+                    {
+                        <div class="item nested-item">
+                            @foreach (var field2 in typeof(Property.Sell).GetFields())
+                            {
+                                var data2 = field2.GetValue(data);
+                                <span>@field2.Name: <span class="number">@data2 </span></span>
+                            }
+                        </div>
+                    }
+                    if (data is Property.Exp)
+                    {
+                        <div class="item nested-item">
+                            @foreach (var field2 in typeof(Property.Exp).GetFields())
+                            {
+                                var data2 = field2.GetValue(data);
+                                <span>@field2.Name: <span class="number">@data2 </span></span>
+                            }
+                        </div>
+                    }
                     <span>@field.Name: <span class="number">@data </span></span>
                 }
             </div>
@@ -390,113 +410,113 @@
 
     private RenderFragment RenderFunction => __builder =>
     {
-    <div>
-        <span>Function</span>
-        <div class="item">
-            @foreach (var field in typeof(Function).GetFields())
-            {
-                var data = field.GetValue(CurrentItem.Data.function);
-                <span>@field.Name: <span class="number">@data </span></span>
-            }
+        <div>
+            <span>Function</span>
+            <div class="item">
+                @foreach (var field in typeof(Function).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.function);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
         </div>
-    </div>
-};
+    };
 
     private RenderFragment RenderTool => __builder =>
     {
-    <div>
-        <span>Tool</span>
-        <div class="item">
-            @foreach (var field in typeof(Tool).GetFields())
-            {
-                var data = field.GetValue(CurrentItem.Data.tool);
-                <span>@field.Name: <span class="number">@data </span></span>
-            }
+        <div>
+            <span>Tool</span>
+            <div class="item">
+                @foreach (var field in typeof(Tool).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.tool);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
         </div>
-    </div>
-};
+    };
 
     private RenderFragment RenderOption => __builder =>
     {
-    <div>
-        <span>Option</span>
-        <div class="item">
-            @foreach (var field in typeof(Option).GetFields())
-            {
-                var data = field.GetValue(CurrentItem.Data.option);
-                <span>@field.Name: <span class="number">@data </span></span>
-            }
+        <div>
+            <span>Option</span>
+            <div class="item">
+                @foreach (var field in typeof(Option).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.option);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
         </div>
-    </div>
-};
+    };
 
     private RenderFragment RenderMaid => __builder =>
     {
-    <div>
-        <span>Maid</span>
-        <div class="item">
-            @foreach (var field in typeof(Maid).GetFields())
-            {
-                var data = field.GetValue(CurrentItem.Data.maid);
-                <span>@field.Name: <span class="number">@data </span></span>
-            }
+        <div>
+            <span>Maid</span>
+            <div class="item">
+                @foreach (var field in typeof(Maid).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.maid);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
         </div>
-    </div>
-};
+    };
 
     private RenderFragment RenderPCBang => __builder =>
     {
-    <div>
-        <span>PCBang</span>
-        <div class="item">
-            @foreach (var field in typeof(PCBang).GetFields())
-            {
-                var data = field.GetValue(CurrentItem.Data.PCBang);
-                <span>@field.Name: <span class="number">@data </span></span>
-            }
+        <div>
+            <span>PCBang</span>
+            <div class="item">
+                @foreach (var field in typeof(PCBang).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.PCBang);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
         </div>
-    </div>
-};
+    };
 
     private RenderFragment RenderMusicScore => __builder =>
     {
-    <div>
-        <span>Music Score</span>
-        <div class="item">
-            @foreach (var field in typeof(MusicScore).GetFields())
-            {
-                var data = field.GetValue(CurrentItem.Data.MusicScore);
-                <span>@field.Name: <span class="number">@data </span></span>
-            }
+        <div>
+            <span>Music Score</span>
+            <div class="item">
+                @foreach (var field in typeof(MusicScore).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.MusicScore);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
         </div>
-    </div>
-};
+    };
 
     private RenderFragment RenderHousing => __builder =>
     {
-    <div>
-        <span>Housing</span>
-        <div class="item">
-            @foreach (var field in typeof(Housing).GetFields())
-            {
-                var data = field.GetValue(CurrentItem.Data.housing);
-                <span>@field.Name: <span class="number">@data </span></span>
-            }
+        <div>
+            <span>Housing</span>
+            <div class="item">
+                @foreach (var field in typeof(Housing).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.housing);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
         </div>
-    </div>
-};
+    };
 
     private RenderFragment RenderShop => __builder =>
     {
-    <div>
-        <span>Shop</span>
-        <div class="item">
-            @foreach (var field in typeof(Shop).GetFields())
-            {
-                var data = field.GetValue(CurrentItem.Data.Shop);
-                <span>@field.Name: <span class="number">@data </span></span>
-            }
+        <div>
+            <span>Shop</span>
+            <div class="item">
+                @foreach (var field in typeof(Shop).GetFields())
+                {
+                    var data = field.GetValue(CurrentItem.Data.Shop);
+                    <span>@field.Name: <span class="number">@data </span></span>
+                }
+            </div>
         </div>
-    </div>
-};
+    };
 }
