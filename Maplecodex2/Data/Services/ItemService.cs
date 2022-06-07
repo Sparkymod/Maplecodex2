@@ -36,14 +36,22 @@ namespace Maplecodex2.Data.Services
 
         public async Task<PagedList<Item>> GetItemsAsync(bool newSearch, string search, int pageNumber = 1, int pageSize = 10)
         {
-            if (ResultsFromQuery is null || newSearch)
+            try
             {
-                ResultsFromQuery = await GetDataItems(search);
-            }
-            int count = ResultsFromQuery.Count;
-            IEnumerable<Item> agentList = ResultsFromQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                if (ResultsFromQuery is null || newSearch)
+                {
+                    ResultsFromQuery = await GetDataItems(search);
+                }
+                int count = ResultsFromQuery.Count;
+                IEnumerable<Item> agentList = ResultsFromQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            return new PagedList<Item>(agentList, count, pageNumber, pageSize);
+                return new PagedList<Item>(agentList, count, pageNumber, pageSize);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
     }
 }

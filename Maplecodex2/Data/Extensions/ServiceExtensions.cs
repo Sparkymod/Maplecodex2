@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Maplecodex2.Components.Notification;
+using System.Reflection;
 
 namespace Maplecodex2.Data.Extensions
 {
@@ -11,6 +12,14 @@ namespace Maplecodex2.Data.Extensions
             {
                 services.AddTransient(service);
             }
+        }
+
+        /// <summary>
+        /// Inject RDK Notification system as a Service.
+        /// </summary>
+        public static void AddRDKNotification(this IServiceCollection services)
+        {
+            services.AddScoped<INotificationService, NotificationService>();
         }
     }
 }

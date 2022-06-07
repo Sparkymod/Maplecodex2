@@ -19,6 +19,9 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="Components\Notification\NotificationWrapper.razor" />
+    <None Include="Components\Notification\RDKNotification.razor" />
+    <None Include="Components\Spinkit\Spinner.razor" />
   </ItemGroup>
 
   <ItemGroup>

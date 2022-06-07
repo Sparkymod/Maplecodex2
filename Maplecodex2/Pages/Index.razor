@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using Maple2.File.Parser.Xml.Item
+@using Maplecodex2.Components.Notification
 @using Maplecodex2.Data.Helpers
 @using Maplecodex2.Data.Models
 @using Maplecodex2.Data.Services
@@ -10,6 +11,8 @@
 @using global::Serilog
 
 @inject ItemService ItemServices
+@inject NavigationManager Navigation
+@inject INotificationService Notification
 
 @inherits DataViewModel<Item>
 
@@ -22,7 +25,6 @@
             {
                 <input @bind="@SearchBy" onselect="@ShowResults()" id="searchInput" class="form-inline mr-sm-2 option-fix" placeholder="Search..." />
             }
-            <button class="button-3" style="margin-left:5px; margin-top: -3px;" @onclick="ResetTable">Back</button>
         </div>
     </div>
 
@@ -42,39 +44,32 @@
     }
 </div>
 
-@if (ItemId == 0)
-{
-    <!-- Table Results -->
-    <ErrorBoundary>
-        <ChildContent>
-            <ItemsTable Items="@PagedResults.Items" ItemId=OnClick />
-        </ChildContent>
-    </ErrorBoundary>
+<!-- Table Results -->
+<ErrorBoundary>
+    <ChildContent>
+        <ItemsTable Items="@PagedResults.Items" ItemId=OnClick />
+    </ChildContent>
+</ErrorBoundary>
 
-    <!-- Pagination -->
-    <nav>
-        <!--Results count-->
+<!-- Pagination -->
+<nav>
+    <!--Results count-->
     <div class="item-align-columns container-flex">
-            <div class="show-more">
-                <label style="padding-left: 1vh;">
-                    @(ItemServices.ResultsFromQuery.Count) Results where found.
-                </label>
-            </div>
+        <div class="show-more">
+            <label style="padding-left: 1vh;">
+                @(ItemServices.ResultsFromQuery.Count) Results where found.
+            </label>
         </div>
-        <ul class="pagination pagination-sm justify-content-center" style="margin-bottom: 5rem;">
-            @foreach (PagingLink link in Links)
-            {
-                <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
-                    <span style="@(char.IsDigit(link.Text, 0) ? "width: 3.5rem; text-align: center;" : null)" class="unselectable btn-toolbar page-link span-color" href="#" data-toggle="tooltip" data-placement="bottom" title="@link.Info">@link.Text</span>
-                </li>
-            }
-        </ul>
-    </nav>
-}
-else
-{
-    <ItemDetails Id=ItemId />
-}
+    </div>
+    <ul class="pagination pagination-sm justify-content-center" style="margin-bottom: 5rem;">
+        @foreach (PagingLink link in Links)
+        {
+            <li @onclick="() => OnSelectedPage(link)" style="cursor: pointer;" class="page-item @(link.Active ? "active" : null) @(link.Enabled ? null : "disabled")">
+                <span style="@(char.IsDigit(link.Text, 0) ? "width: 3.5rem; text-align: center;" : null)" class="unselectable btn-toolbar page-link span-color" href="#" data-toggle="tooltip" data-placement="bottom" title="@link.Info">@link.Text</span>
+            </li>
+        }
+    </ul>
+</nav>
 
 
 @code {
@@ -83,20 +78,21 @@ else
     private void OnClick(int value)
     {
         ItemId = value;
+        Navigation.NavigateTo($"/item/{ItemId}");
     }
 
-    private void ResetTable()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        ItemId = 0;
+        if (firstRender)
+        {
+            SearchBy = string.IsNullOrEmpty(SearchBy) ? "" : SearchBy;
+            await ShowResults();
+
+            await InvokeAsync(() => StateHasChanged());
+        }
     }
 
-    protected override void OnInitialized()
-    {
-        SearchBy = string.IsNullOrEmpty(SearchBy) ? "" : SearchBy;
-        ShowResults().Wait();
-    }
-
-    public override Task ShowResults()
+    public override async Task ShowResults()
     {
         bool newSearch = Helper.VerifyNewSearch(SearchBy, PageSize);
         // Restore page 1 whenever is a new search.
@@ -105,13 +101,13 @@ else
             CurrentLink.Page = 1;
         }
 
-        PagedResults = ItemServices.GetItemsAsync(newSearch, SearchBy, (CurrentLink?.Page ?? 1), PageSize).Result;
+        PagedResults = await ItemServices.GetItemsAsync(newSearch, SearchBy, CurrentLink?.Page ?? 1, PageSize);
 
-        if (PagedResults == null)
+        if (PagedResults is null)
         {
-            CancellationTokenSource ct = new();
-            Log.Warning("Results where null.");
-            return Task.FromCanceled(ct.Token);
+            Notification.Notify<Index>(NotificationType.Error, "No results where found!");
+            await Task.CompletedTask;
+            return;
         }
 
         if (Links != null && Links.Any())
@@ -120,6 +116,5 @@ else
         }
 
         Links = Helper.CreatePaginationLinks(PagedResults, 5);
-        return Task.CompletedTask;
     }
 }

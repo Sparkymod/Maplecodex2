@@ -7,27 +7,12 @@ namespace Maplecodex2
 {
     public static class Settings
     {
-        public static void InitDatabase()
+        public static IConfiguration Configuration { get; set; }
+
+        public static string GetXmlPath()
         {
-            DotEnv.Load();
+            return Configuration["XML_PATH"];
         }
-
-        /// <summary>
-        /// Load Database settings.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetConnectionString()
-        {
-            string server = Environment.GetEnvironmentVariable("DB_IP");
-            string port = Environment.GetEnvironmentVariable("DB_PORT");
-            string name = Environment.GetEnvironmentVariable("DB_NAME");
-            string user = Environment.GetEnvironmentVariable("DB_USER");
-            string password = Environment.GetEnvironmentVariable("DB_PASSWORD");
-
-            return $"server={server};port={port};database={name};user={user};password={password}";
-        }
-
-        public static string GetXmlPath() => Environment.GetEnvironmentVariable("XML_PATH");
 
         public static Logger InitializeSerilog()
         {
@@ -37,8 +22,7 @@ namespace Maplecodex2
 
         public static string GetURL()
         {
-            DotEnv.Load();
-            return Environment.GetEnvironmentVariable("USE_URL");
+            return Configuration["USE_URL"];
         }
     }
 
@@ -134,46 +118,6 @@ namespace Maplecodex2
                         break;
                 }
                 return 0;
-            }
-        }
-    }
-
-    // Dot Environment Settings.
-    public static class DotEnv
-    {
-        public static string? FilePath { get; set; }
-
-        public static void Load(string filepath = ".env")
-        {
-            FilePath = Path.Combine(Environment.CurrentDirectory, filepath);
-
-            Log.Logger.Information(Environment.CurrentDirectory);
-
-            if (!File.Exists(FilePath))
-            {
-                StreamWriter writer = new(FilePath) { AutoFlush = true };
-
-                writer.WriteLine("# Database Info");
-                writer.WriteLine("DB_IP=localhost");
-                writer.WriteLine("DB_PORT=3306");
-                writer.WriteLine("DB_NAME=ms2codex");
-                writer.WriteLine("DB_USER=root");
-                writer.WriteLine("DB_PASSWORD=admin");
-                writer.WriteLine("DEVELOPMENT=true");
-                writer.WriteLine("USE_URL=http://localhost:5000");
-                writer.WriteLine("XML_PATH=");
-                writer.Close();
-            }
-            foreach (string line in File.ReadAllLines(FilePath))
-            {
-                string[] parts = line.Split('=', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-
-                if (parts.Length != 2)
-                {
-                    continue;
-                }
-
-                Environment.SetEnvironmentVariable(parts[0], parts[1]);
             }
         }
     }

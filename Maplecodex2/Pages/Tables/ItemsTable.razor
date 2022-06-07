@@ -1,37 +1,54 @@
-﻿﻿@using Maple2.File.Parser.Xml.Item
+﻿@using Maple2.File.Parser.Xml.Item
+@using Maplecodex2.Components.Spinkit
 @using Maplecodex2.Data.Models
 @using Maplecodex2.Data.Services
 @using Maplecodex2.Pages.Components
 
 <!-- Item Datatable -->
-<div class="block--category">
-    <table class="block-body table table-bordered">
-        <thead>
-            <tr role="row" class="unselectable">
-                <th rowspan="1" colspan="1">Icon</th>
-                <th rowspan="1" colspan="1">ID</th>
-                <th rowspan="1" colspan="1">Name</th>
-                <th rowspan="1" colspan="1">Type</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Item newItem in Items)
-            {
-                <tr role="row" @onclick=" () => OnClick(newItem.Info.Id)">
-                    <DisplayIcon Item="@newItem.Data.property" />
-                    <td class="col-xs-1 unselectable uncopied" id="itemTableId">@newItem.Info.Id</td>
-                    <td class="col-xs-5">@newItem.Info.Name</td>
-                    <td class="col-xs-1">@newItem.Info.Type</td>
+@if (IsLoading)
+{
+    <Spinner CustomCss="width: 20px; height:20px;" SpinnerType="SpinnerType.FadeCircle" />
+}
+else
+{
+    <div class="block--category">
+        <table class="block-body table table-bordered">
+            <thead>
+                <tr role="row" class="unselectable">
+                    <th rowspan="1" colspan="1">Icon</th>
+                    <th rowspan="1" colspan="1">ID</th>
+                    <th rowspan="1" colspan="1">Name</th>
+                    <th rowspan="1" colspan="1">Type</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (Item newItem in Items)
+                {
+                    <tr role="row" @onclick=" () => OnClick(newItem.Info.Id)">
+                        <DisplayIcon Item="@newItem.Data.property" />
+                        <td class="col-xs-1 unselectable uncopied" id="itemTableId">@newItem.Info.Id</td>
+                        <td class="col-xs-5">@newItem.Info.Name</td>
+                        <td class="col-xs-1">@newItem.Info.Type</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
 @code {
-    [Parameter]
-    public IEnumerable<Item> Items { get; set; }
-    [Parameter]
-    public EventCallback<int> ItemId { get; set; }
+    [Parameter] public IEnumerable<Item> Items { get; set; }
+    [Parameter] public EventCallback<int> ItemId { get; set; }
+
+    private bool IsLoading = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IsLoading = false;
+            await InvokeAsync(() => StateHasChanged());
+        }
+    }
 
     private async Task OnClick(int id)
     {
