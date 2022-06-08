@@ -46,7 +46,9 @@ namespace Maplecodex2.Data.Maple2Custom
 
             Dictionary<int, string> itemNames = itemNameMapping.key.ToDictionary((Key key) => key.id, (Key key) => key.name);
             Dictionary<int, string> itemTypes = itemNameMapping.key.ToDictionary((Key key) => key.id, (Key key) => key.type);
-            Dictionary<int, string> itemDesc = itemDescriptionMapping.key.ToDictionary((Key key) => key.id, (Key key) => key.tooltipDescription);
+            Dictionary<int, string> itemToolDesc = itemDescriptionMapping.key.ToDictionary((Key key) => key.id, (Key key) => key.tooltipDescription);
+            Dictionary<int, string> itemGuideDesc = itemDescriptionMapping.key.ToDictionary((Key key) => key.id, (Key key) => key.guideDescription);
+            Dictionary<int, string> itemMainDesc = itemDescriptionMapping.key.ToDictionary((Key key) => key.id, (Key key) => key.mainDescription);
             Dictionary<int, List<int?>> iOCoption = new ();
 
             // Get itemoption Constant
@@ -96,7 +98,9 @@ namespace Maplecodex2.Data.Maple2Custom
                     {
                         info.Id = id;
                         info.Name = itemNames.GetValueOrDefault(id);
-                        info.Description = itemDesc.GetValueOrDefault(id);
+                        info.MainDescription = itemMainDesc.GetValueOrDefault(id);
+                        info.GuideDescription = itemGuideDesc.GetValueOrDefault(id);
+                        info.ToolDescription = itemToolDesc.GetValueOrDefault(id);
                         info.Type = itemTypes.GetValueOrDefault(id);
                         info.Rarities = iOCoption.GetValueOrDefault(id);
                     }

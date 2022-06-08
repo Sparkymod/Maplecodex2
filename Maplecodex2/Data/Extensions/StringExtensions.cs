@@ -47,5 +47,22 @@ namespace Maplecodex2.Data.Extensions
 
             return input.ToString().Contains(comprare.ToString());
         }
+
+
+        public static string SanitizeDescription(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            input = input.Replace("&apos;", "'");
+            input = input.Replace("\n", " ");
+            input = input.Replace("&lt;", "<");
+            input = input.Replace("&gt;", ">");
+            input = input.Replace("&quot;", "\"");
+            // TODO: Handle HTML4 tag like <font color=#000000> </font>
+            return input;
+        }
     }
 }

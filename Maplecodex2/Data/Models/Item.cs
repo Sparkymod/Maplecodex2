@@ -14,7 +14,9 @@ namespace Maplecodex2.Data.Models
     {
         public int Id;
         public string Name;
-        public string Description;
+        public string MainDescription;
+        public string GuideDescription;
+        public string ToolDescription;
         public string Type;
         public List<int?> Rarities;
     }

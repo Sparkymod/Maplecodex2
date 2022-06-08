@@ -130,7 +130,8 @@
     }
 
         .card2 .card2-content span {
-            margin: 0.5rem;
+            padding-top: 0.4rem;
+            margin: 0rem 0.5rem;
         }
 
         .card2 .card2-content .item {
@@ -141,7 +142,7 @@
 
             .card2 .card2-content .item span {
                 margin: 0;
-                padding: 0 20px;
+                padding: 0 15px;
                 font-size: 12px;
             }
 
@@ -231,4 +232,8 @@
     font-weight: 500;
     font-style: italic;
     color: black;
+}
+
+hr{
+    margin: 0.3rem 0 !important;
 }

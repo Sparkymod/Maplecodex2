@@ -25,26 +25,37 @@
                 <img class="header-style shadow-style rarity @SetRarityCSS(_selectRarity)" src="@GetIcon()" alt="">
                 <div class="info-details">
                     <span class="id">ID: @CurrentItem.Info.Id</span>
-                    <span class="gear">Weapon Attack</span>
-                    <span class="number @SetRarityCSS(_selectRarity)">0~2</span>
+                    @if (!string.IsNullOrEmpty(CurrentItem.Info.MainDescription))
+                    {
+                        <span class="gear">@CurrentItem.Info.MainDescription</span>
+                    }
+                    else
+                    {
+                        <span class="gear">Item</span>
+                    }
+                    <span class="number @SetRarityCSS(_selectRarity)"></span>
                 </div>
             </div>
             <div class="info-details">
                 <span class="gear">Gear Score <span class="gear" style="color: blue;">{#}</span></span>
                 <span class="level">Require Level <span class="gear" style="color: blue;">{#}</span></span>
-                <span class="weapon_type">Weapon Type</span>
+                <span class="weapon_type">@CurrentItem.Info.Type</span>
             </div>
         </div>
 
-        @if (!string.IsNullOrEmpty(@CurrentItem.Info.Description))
-        {
-            <!-- Content for the post -->
-            <div class="card2-content">
-                <!-- We can have as many span for contents as we want -->
-                <span>@CurrentItem.Info.Description</span>
-            </div>
-        }
+        <div class="card2-content">
+            @if (!string.IsNullOrEmpty(CurrentItem.Info.ToolDescription))
+            {
+                <span>@CurrentItem.Info.ToolDescription</span>
+            }
+            @if (!string.IsNullOrEmpty(CurrentItem.Info.GuideDescription))
+            {
+                <div class="item">
+                    <span>@CurrentItem.Info.GuideDescription</span>
+                </div>
 
+            }
+        </div>
         <!-- Footer for the post -->
         <div class="card2-footer">
             <img src="img/info-48.png" alt="">
@@ -56,33 +67,57 @@
             <!-- We can have as many span for contents as we want -->
             <div class="card2-content">
                 @RenderBasic
+                <hr />
                 @RenderSlots
+                <hr />
                 @RenderMutation
+                <hr />
                 @RenderCutting
+                <hr />
                 @RenderInstall
+                <hr />
                 @RenderProperty
+                <hr />
                 @RenderMaterial
+                <hr />
                 @RenderLife
+                <hr />
                 @RenderLimit
+                <hr />
                 @RenderSkill
+                <hr />
                 @RenderObjSkill
+                <hr />
                 @RenderTitle
+                <hr />
                 @RenderDrop
+                <hr />
                 @RenderUCC
                 @RenderEffect
+                <hr />
                 @RenderFusion
+                <hr />
                 @RenderPet
+                <hr />
                 @RenderRide
+                <hr />
                 @RenderBadge
+                <hr />
                 @RenderAdditionalEffect
+                <hr />
                 @RenderFunction
+                <hr />
                 @RenderTool
+                <hr />
                 @RenderOption
+                <hr />
                 @RenderMaid
+                <hr />
                 @RenderPCBang
+                <hr />
                 @RenderMusicScore
+                <hr />
                 @RenderHousing
-
             </div>
         }
     </div>
